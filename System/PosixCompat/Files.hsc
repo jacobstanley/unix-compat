@@ -301,7 +301,7 @@ getFdStatus :: Fd -> IO FileStatus
 getFdStatus fd = unsupported "getFdStatus"
 
 getSymbolicLinkStatus :: FilePath -> IO FileStatus
-getSymbolicLinkStatus path = unsupported "getSymbolicLinkStatus"
+getSymbolicLinkStatus path = getFileStatus path
 
 createNamedPipe :: FilePath -> FileMode -> IO ()
 createNamedPipe name mode = unsupported "createNamedPipe"
