@@ -12,6 +12,7 @@ Description:
 Exposed-modules:
   System.PosixCompat.Extensions
   System.PosixCompat.Files
+  System.PosixCompat.User
 -- Also depends on the unix package on POSIX platforms, added by Setup.lhs.
 Build-depends: base
 Extensions: CPP, ForeignFunctionInterface

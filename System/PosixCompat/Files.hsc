@@ -102,8 +102,8 @@ setSymbolicLinkOwnerAndGroup name uid gid = return ()
 #else /* Portable implementations */
 
 unsupported :: String -> IO a
-unsupported loc = ioError $ mkIOError illegalOperationErrorType loc Nothing Nothing
-
+unsupported f = ioError $ mkIOError illegalOperationErrorType x Nothing Nothing
+    where x = "System.PosixCompat.Files." ++ f ++ ": not supported"
 
 -- -----------------------------------------------------------------------------
 -- POSIX file modes
