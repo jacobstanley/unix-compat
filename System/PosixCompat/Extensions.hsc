@@ -7,11 +7,9 @@ module System.PosixCompat.Extensions (
 
 #include "HsUnixCompat.h"
 
+import Foreign.C.Types
 import System.Posix.Types
 
-#if UNIX_IMPL
-import Foreign.C.Types
-#endif
 
 type CMajor = CUInt
 type CMinor = CUInt
