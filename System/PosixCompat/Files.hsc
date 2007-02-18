@@ -59,19 +59,15 @@ module System.PosixCompat.Files (
     PathVar(..), getPathVar, getFdPathVar,
  ) where
 
-#define UNIX !defined(mingw32_HOST_OS)
+#include "HsUnixCompat.h"
 
-#define HAVE_FD_TO_HANDLE __GLASGOW_HASKELL__
-
-#if UNIX
+#if UNIX_IMPL
 
 import System.Posix.Files
 
-#if !HAVE_LCHOWN
+#if NEED_setSymbolicLinkOwnerAndGroup
 import System.Posix.Types
 #endif
-
-#include "HsUnix.h"
 
 #else /* Portable implementation */
 
@@ -95,12 +91,13 @@ import GHC.Handle (fdToHandle)
 
 
 
-#if UNIX
+#if UNIX_IMPL
 
-#if !HAVE_LCHOWN
+#if NEED_setSymbolicLinkOwnerAndGroup
 setSymbolicLinkOwnerAndGroup :: FilePath -> UserID -> GroupID -> IO ()
 setSymbolicLinkOwnerAndGroup name uid gid = return ()
 #endif
+
 
 #else /* Portable implementations */
 

@@ -10,8 +10,13 @@ Description:
   package when available. When it isn't available,
   portable implementations are used.
 Exposed-modules:
+  System.PosixCompat.Extensions
   System.PosixCompat.Files
 -- Also depends on the unix package on POSIX platforms, added by Setup.lhs.
 Build-depends: base
-Extensions: CPP
+Extensions: CPP, ForeignFunctionInterface
+Include-dirs: include
+Install-includes: HsUnixCompat.h
+C-sources: cbits/HsUnixCompat.c
+Extra-source-files: include/HsUnixCompat.h
 GHC-Options: -O -Wall
