@@ -1,0 +1,17 @@
+Name: unix-compat
+Version: 0.1
+License: BSD4
+License-file: LICENSE
+Maintainer: bjorn@bringert.net
+Synopsis: Portable POSIX-compatibility layer.
+Description:
+  This package provides portable implementations of parts
+  of the unix package. This package re-exports the unix 
+  package when available. When it isn't available,
+  portable implementations are used.
+Exposed-modules:
+  System.PosixCompat.Files
+-- Also depends on the unix package on POSIX platforms, added by Setup.lhs.
+Build-depends: base
+Extensions: CPP
+GHC-Options: -O -Wall
