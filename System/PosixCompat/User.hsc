@@ -64,16 +64,16 @@ getEffectiveGroupID :: IO GroupID
 getEffectiveGroupID = unsupported "getEffectiveGroupID"
 
 getGroups :: IO [GroupID]
-getGroups = unsupported "getGroups"
+getGroups = return []
 
 getLoginName :: IO String
 getLoginName = unsupported "getLoginName"
 
 setUserID :: UserID -> IO ()
-setUserID uid = unsupported "setUserID"
+setUserID uid = return ()
 
 setGroupID :: GroupID -> IO ()
-setGroupID gid = unsupported "setGroupID"
+setGroupID gid = return ()
 
 -- -----------------------------------------------------------------------------
 -- User names
@@ -99,7 +99,7 @@ getGroupEntryForName :: String -> IO GroupEntry
 getGroupEntryForName name = unsupported "getGroupEntryForName"
 
 getAllGroupEntries :: IO [GroupEntry]
-getAllGroupEntries = unsupported "getAllGroupEntries"
+getAllGroupEntries = return []
 
 -- -----------------------------------------------------------------------------
 -- The user database (pwd.h)
@@ -122,6 +122,6 @@ getUserEntryForName :: String -> IO UserEntry
 getUserEntryForName name = unsupported "getUserEntryForName"
 
 getAllUserEntries :: IO [UserEntry]
-getAllUserEntries = unsupported "getAllUserEntries"
+getAllUserEntries = return []
 
 #endif
