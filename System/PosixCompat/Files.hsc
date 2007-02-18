@@ -368,7 +368,7 @@ setFileSize file off =
             (\h -> hSetFileSize h (fromIntegral off))
 
 setFdSize :: Fd -> FileOffset -> IO ()
-#if HAVE_FD_TO_HANDLE
+#if __GLASGOW_HASKELL__
 setFdSize (Fd fd) off = 
     do h <- fdToHandle (fromIntegral fd)
        hSetFileSize h (fromIntegral off)

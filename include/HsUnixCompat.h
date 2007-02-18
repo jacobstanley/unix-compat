@@ -1,7 +1,5 @@
 #define UNIX_IMPL !defined(mingw32_HOST_OS)
 
-#define HAVE_FD_TO_HANDLE __GLASGOW_HASKELL__
-
 #if UNIX_IMPL
 #include "HsUnix.h"
 #include <sys/types.h>
