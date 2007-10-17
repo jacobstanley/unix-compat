@@ -20,6 +20,7 @@ Library {
     System.PosixCompat.User
   Extensions: CPP, ForeignFunctionInterface
   Include-dirs: include
+  Includes: HsUnixCompat.h
   Install-includes: HsUnixCompat.h
   C-sources: cbits/HsUnixCompat.c
   GHC-Options: -O -Wall
