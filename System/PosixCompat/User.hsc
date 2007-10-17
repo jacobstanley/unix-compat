@@ -42,6 +42,14 @@ import System.Posix.Types
 
 #if UNIX_IMPL
 
+#if __GLASGOW_HASKELL__<605
+getAllGroupEntries :: IO [GroupEntry]
+getAllGroupEntries = return []
+
+getAllUserEntries :: IO [UserEntry]
+getAllUserEntries = return []
+#endif
+
 #else /* Portable implementation */
 
 unsupported :: String -> IO a
