@@ -13,7 +13,7 @@ Description:
   portable implementations are used.
 Extra-source-files: include/HsUnixCompat.h
 
-Library {
+Library
   Exposed-modules:
     System.PosixCompat.Extensions
     System.PosixCompat.Files
@@ -26,7 +26,5 @@ Library {
   GHC-Options: -Wall
   Build-depends: base
 
-  if !os(mingw32) {
+  if !os(mingw32)
     Build-depends: unix
-  }
-}
