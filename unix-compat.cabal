@@ -23,7 +23,7 @@ Library {
   Includes: HsUnixCompat.h
   Install-includes: HsUnixCompat.h
   C-sources: cbits/HsUnixCompat.c
-  GHC-Options: -O -Wall
+  GHC-Options: -Wall
   Build-depends: base
 
   if !os(mingw32) {
