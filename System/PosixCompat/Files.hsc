@@ -59,14 +59,14 @@ module System.PosixCompat.Files (
     PathVar(..), getPathVar, getFdPathVar,
  ) where
 
-#include "HsUnixCompat.h"
-
 #if UNIX_IMPL
+
+#include "HsUnixCompat.h"
 
 import System.Posix.Files
 
 #if NEED_setSymbolicLinkOwnerAndGroup
-import System.Posix.Types
+import System.PosixCompat.Types
 #endif
 
 #else /* Portable implementation */
@@ -79,7 +79,7 @@ import System.Directory (renameFile, doesFileExist, doesDirectoryExist,
                          getModificationTime)
 import System.IO (IOMode(..), openFile, hFileSize, hSetFileSize, hClose)
 import System.IO.Error
-import System.Posix.Types
+import System.PosixCompat.Types
 import System.Time (ClockTime(..), getClockTime)
 
 #if __GLASGOW_HASKELL__

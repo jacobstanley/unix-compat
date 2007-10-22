@@ -5,10 +5,13 @@ module System.PosixCompat.Extensions (
          deviceMajor, deviceMinor, makeDeviceID
    ) where
 
+
+#if UNIX_IMPL
 #include "HsUnixCompat.h"
+#endif
 
 import Foreign.C.Types
-import System.Posix.Types
+import System.PosixCompat.Types
 
 
 type CMajor = CUInt

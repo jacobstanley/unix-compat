@@ -1,6 +1,6 @@
 Name: unix-compat
-Version: 0.1.1
-Cabal-version: >= 1.2
+Version: 0.1.2.0
+Cabal-version: >= 1.2.1
 Build-type: Simple
 License: BSD4
 License-file: LICENSE
@@ -11,20 +11,30 @@ Description:
   of the unix package. This package re-exports the unix 
   package when available. When it isn't available,
   portable implementations are used.
-Extra-source-files: include/HsUnixCompat.h
+
+Flag split-base
 
 Library
   Exposed-modules:
     System.PosixCompat.Extensions
     System.PosixCompat.Files
     System.PosixCompat.User
-  Extensions: CPP, ForeignFunctionInterface
-  Include-dirs: include
-  Includes: HsUnixCompat.h
-  Install-includes: HsUnixCompat.h
-  C-sources: cbits/HsUnixCompat.c
+    System.PosixCompat.Types
+  Extensions: CPP
   GHC-Options: -Wall
   Build-depends: base
 
-  if !os(mingw32)
+  if os(windows)
+    if flag(split-base)
+      Build-depends: base >= 3, old-time, directory
+    else
+      Build-depends: base < 3
+    Extensions: GeneralizedNewtypeDeriving
+  else
     Build-depends: unix
+    Extensions: ForeignFunctionInterface
+    CPP-options: -DUNIX_IMPL
+    Include-dirs: include
+    Includes: HsUnixCompat.h
+    Install-includes: HsUnixCompat.h
+    C-sources: cbits/HsUnixCompat.c

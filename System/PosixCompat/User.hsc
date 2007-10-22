@@ -26,16 +26,16 @@ module System.PosixCompat.User (
     setGroupID
   ) where
 
-#include "HsUnixCompat.h"
-
 #if UNIX_IMPL
+
+#include "HsUnixCompat.h"
 
 import System.Posix.User
 
 #else /* Portable implementation */
 
 import System.IO.Error
-import System.Posix.Types
+import System.PosixCompat.Types
 
 #endif
 
