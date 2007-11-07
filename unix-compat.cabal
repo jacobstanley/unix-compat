@@ -1,5 +1,5 @@
 Name: unix-compat
-Version: 0.1.2.0
+Version: 0.1.2.1
 Cabal-version: >= 1.2.1
 Build-type: Simple
 License: BSD4
@@ -34,7 +34,6 @@ Library
     Build-depends: unix
     Extensions: ForeignFunctionInterface
     CPP-options: -DUNIX_IMPL
-    CC-options: -DUNIX_IMPL
     Include-dirs: include
     Includes: HsUnixCompat.h
     Install-includes: HsUnixCompat.h
