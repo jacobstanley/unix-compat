@@ -2,7 +2,7 @@ Name: unix-compat
 Version: 0.1.2.1
 Cabal-version: >= 1.2.1
 Build-type: Simple
-License: BSD4
+License: BSD3
 License-file: LICENSE
 Maintainer: bjorn@bringert.net
 Synopsis: Portable POSIX-compatibility layer.
