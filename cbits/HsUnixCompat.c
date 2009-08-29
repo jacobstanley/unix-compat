@@ -1,5 +1,9 @@
 #include "HsUnixCompat.h"
 
+#ifdef SOLARIS
+#include <sys/mkdev.h>
+#endif
+
 unsigned int unix_major(dev_t dev) {
   return major(dev);
 }

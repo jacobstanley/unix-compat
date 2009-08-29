@@ -38,3 +38,5 @@ Library
     Includes: HsUnixCompat.h
     Install-includes: HsUnixCompat.h
     C-sources: cbits/HsUnixCompat.c
+    if os(solaris)
+      cc-options: -DSOLARIS
