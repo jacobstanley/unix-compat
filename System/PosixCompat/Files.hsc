@@ -74,6 +74,7 @@ import System.PosixCompat.Types
 import Control.Exception (bracket)
 import Control.Monad (liftM, liftM2)
 import Data.Bits ((.|.), (.&.))
+import Prelude hiding (read)
 import System.Directory (renameFile, doesFileExist, doesDirectoryExist, 
                          Permissions(..), getPermissions, setPermissions,
                          getModificationTime)
