@@ -4,7 +4,7 @@ Cabal-version: >= 1.2.1
 Build-type: Simple
 License: BSD3
 License-file: LICENSE
-Maintainer: bjorn@bringert.net
+Maintainer: jacob@stanley.io
 Synopsis: Portable POSIX-compatibility layer.
 Description:
   This package provides portable implementations of parts
