@@ -95,7 +95,7 @@ import GHC.Handle (fdToHandle)
 
 #if NEED_setSymbolicLinkOwnerAndGroup
 setSymbolicLinkOwnerAndGroup :: FilePath -> UserID -> GroupID -> IO ()
-setSymbolicLinkOwnerAndGroup name uid gid = return ()
+setSymbolicLinkOwnerAndGroup _ _ _ = return ()
 #endif
 
 
@@ -180,11 +180,11 @@ setFileMode name m = setPermissions name $ modeToPerms m
 
 
 setFdMode :: Fd -> FileMode -> IO ()
-setFdMode fd m = unsupported "setFdMode"
+setFdMode _ _ = unsupported "setFdMode"
 
 -- | The portable implementation does nothing and returns 'nullFileMode'.
 setFileCreationMask :: FileMode -> IO FileMode
-setFileCreationMask mask = return nullFileMode
+setFileCreationMask _ = return nullFileMode
 
 modeToPerms :: FileMode -> Permissions
 modeToPerms m = Permissions {
@@ -298,34 +298,34 @@ clockTimeToEpochTime (TOD s _) = fromInteger s
 
 
 getFdStatus :: Fd -> IO FileStatus
-getFdStatus fd = unsupported "getFdStatus"
+getFdStatus _ = unsupported "getFdStatus"
 
 getSymbolicLinkStatus :: FilePath -> IO FileStatus
 getSymbolicLinkStatus path = getFileStatus path
 
 createNamedPipe :: FilePath -> FileMode -> IO ()
-createNamedPipe name mode = unsupported "createNamedPipe"
+createNamedPipe _ _ = unsupported "createNamedPipe"
 
 createDevice :: FilePath -> FileMode -> DeviceID -> IO ()
-createDevice path mode dev = unsupported "createDevice"
+createDevice _ _ _ = unsupported "createDevice"
 
 -- -----------------------------------------------------------------------------
 -- Hard links
 
 createLink :: FilePath -> FilePath -> IO ()
-createLink name1 name2 = unsupported "createLink"
+createLink _ _ = unsupported "createLink"
 
 removeLink :: FilePath -> IO ()
-removeLink name = unsupported "removeLink"
+removeLink _ = unsupported "removeLink"
 
 -- -----------------------------------------------------------------------------
 -- Symbolic Links
 
 createSymbolicLink :: FilePath -> FilePath -> IO ()
-createSymbolicLink file1 file2 = unsupported "createSymbolicLink"
+createSymbolicLink _ _ = unsupported "createSymbolicLink"
 
 readSymbolicLink :: FilePath -> IO FilePath
-readSymbolicLink file = unsupported "readSymbolicLink"
+readSymbolicLink _ = unsupported "readSymbolicLink"
 
 -- -----------------------------------------------------------------------------
 -- Renaming files
@@ -338,21 +338,21 @@ rename name1 name2 = renameFile name1 name2
 
 -- | The portable implementation does nothing.
 setOwnerAndGroup :: FilePath -> UserID -> GroupID -> IO ()
-setOwnerAndGroup name uid gid = return ()
+setOwnerAndGroup _ _ _ = return ()
 
 -- | The portable implementation does nothing.
 setFdOwnerAndGroup :: Fd -> UserID -> GroupID -> IO ()
-setFdOwnerAndGroup fd uid gid = return ()
+setFdOwnerAndGroup _ _ _ = return ()
 
 -- | The portable implementation does nothing.
 setSymbolicLinkOwnerAndGroup :: FilePath -> UserID -> GroupID -> IO ()
-setSymbolicLinkOwnerAndGroup name uid gid = return ()
+setSymbolicLinkOwnerAndGroup _ _ _ = return ()
 
 -- -----------------------------------------------------------------------------
 -- utime()
 
 setFileTimes :: FilePath -> EpochTime -> EpochTime -> IO ()
-setFileTimes name atime mtime = unsupported "setFileTimes"
+setFileTimes _ _ _ = unsupported "setFileTimes"
 
 touchFile :: FilePath -> IO ()
 touchFile name = 
@@ -402,10 +402,10 @@ data PathVar
   | SyncIOAvailable		  {- _PC_SYNC_IO          -}
 
 getPathVar :: FilePath -> PathVar -> IO Limit
-getPathVar name v = unsupported "getPathVar"
+getPathVar _ _ = unsupported "getPathVar"
 
 getFdPathVar :: Fd -> PathVar -> IO Limit
-getFdPathVar fd v = unsupported "getFdPathVar"
+getFdPathVar _ _ = unsupported "getFdPathVar"
 
 #endif
 

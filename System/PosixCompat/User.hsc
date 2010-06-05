@@ -78,10 +78,10 @@ getLoginName :: IO String
 getLoginName = unsupported "getLoginName"
 
 setUserID :: UserID -> IO ()
-setUserID uid = return ()
+setUserID _ = return ()
 
 setGroupID :: GroupID -> IO ()
-setGroupID gid = return ()
+setGroupID _ = return ()
 
 -- -----------------------------------------------------------------------------
 -- User names
@@ -101,10 +101,10 @@ data GroupEntry =
  } deriving (Show, Read, Eq)
 
 getGroupEntryForID :: GroupID -> IO GroupEntry
-getGroupEntryForID gid = unsupported "getGroupEntryForID"
+getGroupEntryForID _ = unsupported "getGroupEntryForID"
 
 getGroupEntryForName :: String -> IO GroupEntry
-getGroupEntryForName name = unsupported "getGroupEntryForName"
+getGroupEntryForName _ = unsupported "getGroupEntryForName"
 
 getAllGroupEntries :: IO [GroupEntry]
 getAllGroupEntries = return []
@@ -124,10 +124,10 @@ data UserEntry =
  } deriving (Show, Read, Eq)
 
 getUserEntryForID :: UserID -> IO UserEntry
-getUserEntryForID uid = unsupported "getUserEntryForID"
+getUserEntryForID _ = unsupported "getUserEntryForID"
 
 getUserEntryForName :: String -> IO UserEntry
-getUserEntryForName name = unsupported "getUserEntryForName"
+getUserEntryForName _ = unsupported "getUserEntryForName"
 
 getAllUserEntries :: IO [UserEntry]
 getAllUserEntries = return []
