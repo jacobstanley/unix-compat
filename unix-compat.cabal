@@ -12,8 +12,6 @@ Description:
   package when available. When it isn't available,
   portable implementations are used.
 
-Flag split-base
-
 Library
   Exposed-modules:
     System.PosixCompat.Extensions
@@ -22,16 +20,13 @@ Library
     System.PosixCompat.Types
   Extensions: CPP
   GHC-Options: -Wall
-  Build-depends: base
+  Build-depends: base == 4.*
 
   if os(windows)
-    if flag(split-base)
-      Build-depends: base >= 3, old-time, directory
-    else
-      Build-depends: base < 3
+    Build-depends: old-time == 1.0.*, directory == 1.0.*
     Extensions: GeneralizedNewtypeDeriving
   else
-    Build-depends: unix
+    Build-depends: unix == 2.4.*
     Extensions: ForeignFunctionInterface
     CPP-options: -DUNIX_IMPL
     Include-dirs: include
