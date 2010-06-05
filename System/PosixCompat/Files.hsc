@@ -84,7 +84,7 @@ import System.PosixCompat.Types
 import System.Time (ClockTime(..), getClockTime)
 
 #if __GLASGOW_HASKELL__
-import GHC.Handle (fdToHandle)
+import GHC.IO.Handle.FD (fdToHandle)
 #endif
 
 
