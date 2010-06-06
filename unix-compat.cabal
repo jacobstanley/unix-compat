@@ -18,6 +18,7 @@ Flag portable
 
 Library
   exposed-modules:
+    System.PosixCompat
     System.PosixCompat.Extensions
     System.PosixCompat.Files
     System.PosixCompat.User
