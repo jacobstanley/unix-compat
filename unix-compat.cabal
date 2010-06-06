@@ -36,3 +36,4 @@ Library
     C-sources: cbits/HsUnixCompat.c
     if os(solaris)
       cc-options: -DSOLARIS
+

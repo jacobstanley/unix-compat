@@ -50,3 +50,4 @@ foreign import ccall unsafe "unix_makedev" unix_makedev :: CUInt -> CUInt -> CDe
 #else
 makeDeviceID _ _ = 0
 #endif
+

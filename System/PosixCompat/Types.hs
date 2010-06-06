@@ -30,3 +30,4 @@ instance Read LinkCount where readsPrec i s = [ (LinkCount x, s')
                                               | (x,s') <- readsPrec i s]
 
 #endif
+
