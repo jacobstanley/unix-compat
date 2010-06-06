@@ -18,6 +18,8 @@ Flag portable
   description: Force compiling in portable mode, useful for testing.
 
 Library
+  hs-source-dirs: src
+
   exposed-modules:
     System.PosixCompat
     System.PosixCompat.Extensions
