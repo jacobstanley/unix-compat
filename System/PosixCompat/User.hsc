@@ -1,3 +1,8 @@
+{-|
+This module makes the operations exported by @System.Posix.User@
+available on all platforms. On POSIX systems it re-exports operations from
+@System.Posix.User@. On other platforms it provides dummy implementations.
+-}
 module System.PosixCompat.User (
     -- * User environment
     -- ** Querying the user environment

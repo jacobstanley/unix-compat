@@ -1,3 +1,9 @@
+{-|
+This module re-exports the types from @System.Posix.Types@ on all platforms.
+
+On Windows 'UserID', 'GroupID' and 'LinkCount' are missing, so they are
+redefined by this module.
+-}
 module System.PosixCompat.Types (
     module System.Posix.Types,
 #ifdef MISSING_POSIX_TYPES

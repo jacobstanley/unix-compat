@@ -1,9 +1,12 @@
--- | This module makes the operations exported by "System.Posix.Files" 
--- available on all platforms. On POSIX systems it re-exports operations 
--- from "System.Posix.Files". On other platforms it emulates this
--- operations as far as possible.
---
--- NOTE: the portable implementations are not well tested.
+{-|
+This module makes the operations exported by @System.Posix.Files@
+available on all platforms. On POSIX systems it re-exports operations from
+@System.Posix.Files@. On other platforms it emulates the operations as far
+as possible.
+
+/NOTE: the portable implementations are not well tested, in some cases
+functions are only stubs./
+-}
 module System.PosixCompat.Files (
     -- * File modes
     -- FileMode exported by System.Posix.Types
