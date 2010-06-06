@@ -17,6 +17,7 @@ Library
     System.PosixCompat.Extensions
     System.PosixCompat.Files
     System.PosixCompat.User
+    System.PosixCompat.Time
     System.PosixCompat.Types
   Extensions: CPP
   GHC-Options: -Wall
