@@ -12,6 +12,10 @@ Description:
   package when available. When it isn't available,
   portable implementations are used.
 
+Flag portable
+  Default: False
+  Description: Force compiling in portable mode, useful for testing.
+
 Library
   Exposed-modules:
     System.PosixCompat.Extensions
@@ -23,9 +27,11 @@ Library
   GHC-Options: -Wall
   Build-depends: base == 4.*
 
-  if os(windows)
+  if flag(portable) || os(windows)
     Build-depends: old-time == 1.0.*, directory == 1.0.*
     Extensions: GeneralizedNewtypeDeriving
+    if os(windows)
+      cpp-options: -DMISSING_POSIX_TYPES
   else
     Build-depends: unix == 2.4.*
     Extensions: ForeignFunctionInterface

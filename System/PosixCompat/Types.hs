@@ -1,13 +1,13 @@
 module System.PosixCompat.Types (
-  module System.Posix.Types,
-#ifndef UNIX_IMPL
-  UserID, GroupID, LinkCount
+    module System.Posix.Types,
+#ifdef MISSING_POSIX_TYPES
+    UserID, GroupID, LinkCount
 #endif
   ) where
 
 import System.Posix.Types
 
-#ifndef UNIX_IMPL
+#ifdef MISSING_POSIX_TYPES
 
 import Data.Word (Word32)
 
