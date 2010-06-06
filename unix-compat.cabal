@@ -1,45 +1,45 @@
-Name: unix-compat
-Version: 0.2
-Cabal-version: >= 1.2.1
-Build-type: Simple
-License: BSD3
-License-file: LICENSE
-Maintainer: jacob@stanley.io
-Synopsis: Portable POSIX-compatibility layer.
-Description:
+name: unix-compat
+version: 0.2
+cabal-version: >= 1.2.1
+build-type: Simple
+license: BSD3
+license-file: LICENSE
+maintainer: jacob@stanley.io
+synopsis: Portable POSIX-compatibility layer.
+description:
   This package provides portable implementations of parts
   of the unix package. This package re-exports the unix 
   package when available. When it isn't available,
   portable implementations are used.
 
 Flag portable
-  Default: False
-  Description: Force compiling in portable mode, useful for testing.
+  default: False
+  description: Force compiling in portable mode, useful for testing.
 
 Library
-  Exposed-modules:
+  exposed-modules:
     System.PosixCompat.Extensions
     System.PosixCompat.Files
     System.PosixCompat.User
     System.PosixCompat.Time
     System.PosixCompat.Types
-  Extensions: CPP
-  GHC-Options: -Wall
-  Build-depends: base == 4.*
+  extensions: CPP
+  ghc-options: -Wall
+  build-depends: base == 4.*
 
   if flag(portable) || os(windows)
-    Build-depends: old-time == 1.0.*, directory == 1.0.*
-    Extensions: GeneralizedNewtypeDeriving
+    build-depends: old-time == 1.0.*, directory == 1.0.*
+    extensions: GeneralizedNewtypeDeriving
     if os(windows)
       cpp-options: -DMISSING_POSIX_TYPES
   else
-    Build-depends: unix == 2.4.*
-    Extensions: ForeignFunctionInterface
-    CPP-options: -DUNIX_IMPL
-    Include-dirs: include
-    Includes: HsUnixCompat.h
-    Install-includes: HsUnixCompat.h
-    C-sources: cbits/HsUnixCompat.c
+    build-depends: unix == 2.4.*
+    extensions: ForeignFunctionInterface
+    cpp-options: -DUNIX_IMPL
+    include-dirs: include
+    includes: HsUnixCompat.h
+    install-includes: HsUnixCompat.h
+    c-sources: cbits/HsUnixCompat.c
     if os(solaris)
       cc-options: -DSOLARIS
 
