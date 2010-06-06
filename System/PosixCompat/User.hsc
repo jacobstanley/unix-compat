@@ -32,16 +32,6 @@ module System.PosixCompat.User (
 
 import System.Posix.User
 
-#else /* Portable implementation */
-
-import System.IO.Error
-import System.PosixCompat.Types
-
-#endif
-
-
-#if UNIX_IMPL
-
 #if __GLASGOW_HASKELL__<605
 getAllGroupEntries :: IO [GroupEntry]
 getAllGroupEntries = return []
@@ -51,6 +41,9 @@ getAllUserEntries = return []
 #endif
 
 #else /* Portable implementation */
+
+import System.IO.Error
+import System.PosixCompat.Types
 
 unsupported :: String -> IO a
 unsupported f = ioError $ mkIOError illegalOperationErrorType x Nothing Nothing
