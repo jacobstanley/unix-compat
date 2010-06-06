@@ -67,6 +67,9 @@ import System.Posix.Files
 
 #if NEED_setSymbolicLinkOwnerAndGroup
 import System.PosixCompat.Types
+
+setSymbolicLinkOwnerAndGroup :: FilePath -> UserID -> GroupID -> IO ()
+setSymbolicLinkOwnerAndGroup _ _ _ = return ()
 #endif
 
 #else /* Portable implementation */
@@ -87,20 +90,6 @@ import System.Time (ClockTime(..), getClockTime)
 import GHC.IO.Handle.FD (fdToHandle)
 #endif
 
-
-#endif
-
-
-
-#if UNIX_IMPL
-
-#if NEED_setSymbolicLinkOwnerAndGroup
-setSymbolicLinkOwnerAndGroup :: FilePath -> UserID -> GroupID -> IO ()
-setSymbolicLinkOwnerAndGroup _ _ _ = return ()
-#endif
-
-
-#else /* Portable implementations */
 
 unsupported :: String -> IO a
 unsupported f = ioError $ mkIOError illegalOperationErrorType x Nothing Nothing
