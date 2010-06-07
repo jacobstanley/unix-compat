@@ -6,7 +6,7 @@ module System.PosixCompat.Extensions (
    ) where
 
 
-#if UNIX_IMPL
+#ifdef UNIX_IMPL
 #include "HsUnixCompat.h"
 #endif
 
@@ -21,7 +21,7 @@ type CMinor = CUInt
 -- 
 -- The portable implementation always returns @0@.
 deviceMajor :: DeviceID -> CMajor
-#if UNIX_IMPL
+#ifdef UNIX_IMPL
 deviceMajor dev = unix_major dev
 
 foreign import ccall unsafe "unix_major" unix_major :: CDev -> CUInt
@@ -33,7 +33,7 @@ deviceMajor _ = 0
 -- 
 -- The portable implementation always returns @0@.
 deviceMinor :: DeviceID -> CMinor
-#if UNIX_IMPL
+#ifdef UNIX_IMPL
 deviceMinor dev = unix_minor dev
 
 foreign import ccall unsafe "unix_minor" unix_minor :: CDev -> CUInt
@@ -43,7 +43,7 @@ deviceMinor _ = 0
 
 -- | Creates a 'DeviceID' for a device file given a major and minor number.
 makeDeviceID :: CMajor -> CMinor -> DeviceID
-#if UNIX_IMPL
+#ifdef UNIX_IMPL
 makeDeviceID ma mi = unix_makedev ma mi
 
 foreign import ccall unsafe "unix_makedev" unix_makedev :: CUInt -> CUInt -> CDev

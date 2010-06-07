@@ -31,7 +31,7 @@ module System.PosixCompat.User (
     setGroupID
   ) where
 
-#if UNIX_IMPL
+#ifdef UNIX_IMPL
 
 #include "HsUnixCompat.h"
 

@@ -62,7 +62,7 @@ module System.PosixCompat.Files (
     PathVar(..), getPathVar, getFdPathVar,
  ) where
 
-#if UNIX_IMPL
+#ifdef UNIX_IMPL
 
 #include "HsUnixCompat.h"
 
@@ -89,7 +89,7 @@ import System.IO.Error
 import System.PosixCompat.Types
 import System.Time (ClockTime(..), getClockTime)
 
-#if __GLASGOW_HASKELL__
+#ifdef __GLASGOW_HASKELL__
 import GHC.IO.Handle.FD (fdToHandle)
 #endif
 
@@ -361,7 +361,7 @@ setFileSize file off =
             (\h -> hSetFileSize h (fromIntegral off))
 
 setFdSize :: Fd -> FileOffset -> IO ()
-#if __GLASGOW_HASKELL__
+#ifdef __GLASGOW_HASKELL__
 setFdSize (Fd fd) off = 
     do h <- fdToHandle (fromIntegral fd)
        hSetFileSize h (fromIntegral off)
