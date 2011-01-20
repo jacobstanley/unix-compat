@@ -9,7 +9,7 @@ Executable testsuite
   build-depends:
     base == 4.*,
     unix == 2.4.*,
-    unix-compat == 0.2.*
+    unix-compat == 0.2.1.*
 
   build-depends:
     HUnit,
