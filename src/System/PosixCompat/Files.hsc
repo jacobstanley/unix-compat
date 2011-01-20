@@ -81,9 +81,7 @@ import Control.Exception (bracket)
 import Control.Monad (liftM, liftM2)
 import Data.Bits ((.|.), (.&.))
 import Prelude hiding (read)
-import System.Directory (renameFile, doesFileExist, doesDirectoryExist, 
-                         Permissions(..), getPermissions, setPermissions,
-                         getModificationTime)
+import System.Directory
 import System.IO (IOMode(..), openFile, hFileSize, hSetFileSize, hClose)
 import System.IO.Error
 import System.PosixCompat.Types
@@ -180,12 +178,12 @@ setFileCreationMask :: FileMode -> IO FileMode
 setFileCreationMask _ = return nullFileMode
 
 modeToPerms :: FileMode -> Permissions
-modeToPerms m = Permissions {
-                             readable   = m .&. ownerReadMode    /= 0,
-                             writable   = m .&. ownerWriteMode   /= 0,
-                             executable = m .&. ownerExecuteMode /= 0,
-                             searchable = m .&. ownerExecuteMode /= 0
-                            }
+modeToPerms m =
+    setOwnerReadable   (m .&. ownerReadMode    /= 0) $
+    setOwnerWritable   (m .&. ownerWriteMode   /= 0) $
+    setOwnerExecutable (m .&. ownerExecuteMode /= 0) $
+    setOwnerSearchable (m .&. ownerExecuteMode /= 0) $
+    emptyPermissions
 
 -- -----------------------------------------------------------------------------
 -- access()
