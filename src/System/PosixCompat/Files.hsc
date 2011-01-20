@@ -36,7 +36,7 @@ module System.PosixCompat.Files (
     isDirectory, isSymbolicLink, isSocket,
 
     -- * Creation
-    createNamedPipe, 
+    createNamedPipe,
     createDevice,
 
     -- * Hard links
@@ -94,7 +94,8 @@ import GHC.IO.Handle.FD (fdToHandle)
 
 unsupported :: String -> IO a
 unsupported f = ioError $ mkIOError illegalOperationErrorType x Nothing Nothing
-    where x = "System.PosixCompat.Files." ++ f ++ ": not supported"
+  where
+    x = "System.PosixCompat.Files." ++ f ++ ": not supported"
 
 -- -----------------------------------------------------------------------------
 -- POSIX file modes
@@ -132,9 +133,9 @@ groupModes       :: FileMode
 otherModes       :: FileMode
 accessModes      :: FileMode
 
-stdFileMode = ownerReadMode  .|. ownerWriteMode .|. 
-	      groupReadMode  .|. groupWriteMode .|. 
-	      otherReadMode  .|. otherWriteMode
+stdFileMode = ownerReadMode  .|. ownerWriteMode .|.
+              groupReadMode  .|. groupWriteMode .|.
+              otherReadMode  .|. otherWriteMode
 ownerModes  = ownerReadMode  .|. ownerWriteMode .|. ownerExecuteMode
 groupModes  = groupReadMode  .|. groupWriteMode .|. groupExecuteMode
 otherModes  = otherReadMode  .|. otherWriteMode .|. otherExecuteMode
@@ -189,10 +190,10 @@ modeToPerms m =
 -- access()
 
 fileAccess :: FilePath -> Bool -> Bool -> Bool -> IO Bool
-fileAccess name read write exec = 
+fileAccess name read write exec =
     do perm <- getPermissions name
-       return $ (not read  || readable perm) 
-             && (not write || writable perm) 
+       return $ (not read  || readable perm)
+             && (not write || writable perm)
              && (not exec  || executable perm || searchable perm)
 
 fileExist :: FilePath -> IO Bool
@@ -201,79 +202,79 @@ fileExist name = liftM2 (||) (doesFileExist name) (doesDirectoryExist name)
 -- -----------------------------------------------------------------------------
 -- stat() support
 
-data FileStatus = FileStatus {
-                              deviceID         :: DeviceID,
-                              fileID           :: FileID,
-                              fileMode         :: FileMode,
-                              linkCount        :: LinkCount,
-                              fileOwner        :: UserID,
-                              fileGroup        :: GroupID,
-                              specialDeviceID  :: DeviceID,
-                              fileSize         :: FileOffset,
-                              accessTime       :: EpochTime,
-                              modificationTime :: EpochTime,
-                              statusChangeTime :: EpochTime
-                             }
+data FileStatus = FileStatus
+    { deviceID         :: DeviceID
+    , fileID           :: FileID
+    , fileMode         :: FileMode
+    , linkCount        :: LinkCount
+    , fileOwner        :: UserID
+    , fileGroup        :: GroupID
+    , specialDeviceID  :: DeviceID
+    , fileSize         :: FileOffset
+    , accessTime       :: EpochTime
+    , modificationTime :: EpochTime
+    , statusChangeTime :: EpochTime
+    }
 
 isBlockDevice :: FileStatus -> Bool
-isBlockDevice stat = 
-  (fileMode stat `intersectFileModes` fileTypeModes) == blockSpecialMode
+isBlockDevice stat =
+    (fileMode stat `intersectFileModes` fileTypeModes) == blockSpecialMode
 
 isCharacterDevice :: FileStatus -> Bool
-isCharacterDevice stat = 
-  (fileMode stat `intersectFileModes` fileTypeModes) == characterSpecialMode
+isCharacterDevice stat =
+    (fileMode stat `intersectFileModes` fileTypeModes) == characterSpecialMode
 
 isNamedPipe :: FileStatus -> Bool
-isNamedPipe stat = 
-  (fileMode stat `intersectFileModes` fileTypeModes) == namedPipeMode
+isNamedPipe stat =
+    (fileMode stat `intersectFileModes` fileTypeModes) == namedPipeMode
 
 isRegularFile :: FileStatus -> Bool
-isRegularFile stat = 
-  (fileMode stat `intersectFileModes` fileTypeModes) == regularFileMode
+isRegularFile stat =
+    (fileMode stat `intersectFileModes` fileTypeModes) == regularFileMode
 
 isDirectory :: FileStatus -> Bool
-isDirectory stat = 
-  (fileMode stat `intersectFileModes` fileTypeModes) == directoryMode
+isDirectory stat =
+    (fileMode stat `intersectFileModes` fileTypeModes) == directoryMode
 
 isSymbolicLink :: FileStatus -> Bool
-isSymbolicLink stat = 
-  (fileMode stat `intersectFileModes` fileTypeModes) == symbolicLinkMode
+isSymbolicLink stat =
+    (fileMode stat `intersectFileModes` fileTypeModes) == symbolicLinkMode
 
 isSocket :: FileStatus -> Bool
-isSocket stat = 
-  (fileMode stat `intersectFileModes` fileTypeModes) == socketMode
+isSocket stat =
+    (fileMode stat `intersectFileModes` fileTypeModes) == socketMode
 
 getFileStatus :: FilePath -> IO FileStatus
-getFileStatus path = 
+getFileStatus path =
     do perm  <- liftM permsToMode $ getPermissions path
        typ   <- getFileType path
        size  <- if typ == regularFileMode then getFileSize path else return 0
        mtime <- liftM clockTimeToEpochTime $ getModificationTime path
-       return $ FileStatus {
-                            deviceID           = -1,
-                            fileID             = -1,
-                            fileMode           = typ .|. perm,
-                            linkCount          = 1,
-                            fileOwner          = 0,
-                            fileGroup          = 0,
-                            specialDeviceID    = 0,
-                            fileSize           = size,
-                            accessTime         = mtime,
-                            modificationTime   = mtime,
-                            statusChangeTime   = mtime
-                           }
+       return $ FileStatus
+                { deviceID         = -1
+                , fileID           = -1
+                , fileMode         = typ .|. perm
+                , linkCount        = 1
+                , fileOwner        = 0
+                , fileGroup        = 0
+                , specialDeviceID  = 0
+                , fileSize         = size
+                , accessTime       = mtime
+                , modificationTime = mtime
+                , statusChangeTime = mtime }
 
 permsToMode :: Permissions -> FileMode
 permsToMode perms = r .|. w .|. x
-  where r = f (readable perms) (ownerReadMode .|. groupReadMode .|. otherReadMode)
-        w = f (writable perms) (ownerWriteMode .|. groupWriteMode .|. otherWriteMode)
-        x = f (executable perms || searchable perms) 
-                     (ownerExecuteMode .|. groupExecuteMode .|. otherExecuteMode)
-        f True m  = m
-        f False _ = nullFileMode
+  where
+    r = f (readable perms) (ownerReadMode .|. groupReadMode .|. otherReadMode)
+    w = f (writable perms) (ownerWriteMode .|. groupWriteMode .|. otherWriteMode)
+    x = f (executable perms || searchable perms)
+          (ownerExecuteMode .|. groupExecuteMode .|. otherExecuteMode)
+    f True m  = m
+    f False _ = nullFileMode
 
 getFileType :: FilePath -> IO FileMode
-getFileType path = 
+getFileType path =
     do f <- doesFileExist path
        if f then return regularFileMode
             else do d <- doesDirectoryExist path
@@ -281,7 +282,7 @@ getFileType path =
                          else unsupported "Unknown file type."
 
 getFileSize :: FilePath -> IO FileOffset
-getFileSize path = 
+getFileSize path =
     bracket (openFile path ReadMode) hClose (liftM fromIntegral . hFileSize)
 
 clockTimeToEpochTime :: ClockTime -> EpochTime
@@ -346,21 +347,21 @@ setFileTimes :: FilePath -> EpochTime -> EpochTime -> IO ()
 setFileTimes _ _ _ = unsupported "setFileTimes"
 
 touchFile :: FilePath -> IO ()
-touchFile name = 
-    do t <- liftM clockTimeToEpochTime getClockTime 
+touchFile name =
+    do t <- liftM clockTimeToEpochTime getClockTime
        setFileTimes name t t
 
 -- -----------------------------------------------------------------------------
 -- Setting file sizes
 
 setFileSize :: FilePath -> FileOffset -> IO ()
-setFileSize file off = 
+setFileSize file off =
     bracket (openFile file WriteMode) (hClose)
             (\h -> hSetFileSize h (fromIntegral off))
 
 setFdSize :: Fd -> FileOffset -> IO ()
 #ifdef __GLASGOW_HASKELL__
-setFdSize (Fd fd) off = 
+setFdSize (Fd fd) off =
     do h <- fdToHandle (fromIntegral fd)
        hSetFileSize h (fromIntegral off)
 #else
@@ -371,26 +372,27 @@ setFdSize fd off = unsupported "setFdSize"
 -- pathconf()/fpathconf() support
 
 data PathVar
-  = FileSizeBits		  {- _PC_FILESIZEBITS     -}
-  | LinkLimit                     {- _PC_LINK_MAX         -}
-  | InputLineLimit                {- _PC_MAX_CANON        -}
-  | InputQueueLimit               {- _PC_MAX_INPUT        -}
-  | FileNameLimit                 {- _PC_NAME_MAX         -}
-  | PathNameLimit                 {- _PC_PATH_MAX         -}
-  | PipeBufferLimit               {- _PC_PIPE_BUF         -}
-				  -- These are described as optional in POSIX:
-  				  {- _PC_ALLOC_SIZE_MIN     -}
-  				  {- _PC_REC_INCR_XFER_SIZE -}
-  				  {- _PC_REC_MAX_XFER_SIZE  -}
-  				  {- _PC_REC_MIN_XFER_SIZE  -}
- 				  {- _PC_REC_XFER_ALIGN     -}
-  | SymbolicLinkLimit		  {- _PC_SYMLINK_MAX      -}
-  | SetOwnerAndGroupIsRestricted  {- _PC_CHOWN_RESTRICTED -}
-  | FileNamesAreNotTruncated      {- _PC_NO_TRUNC         -}
-  | VDisableChar		  {- _PC_VDISABLE         -}
-  | AsyncIOAvailable		  {- _PC_ASYNC_IO         -}
-  | PrioIOAvailable		  {- _PC_PRIO_IO          -}
-  | SyncIOAvailable		  {- _PC_SYNC_IO          -}
+  = FileSizeBits                  -- _PC_FILESIZEBITS
+  | LinkLimit                     -- _PC_LINK_MAX
+  | InputLineLimit                -- _PC_MAX_CANON
+  | InputQueueLimit               -- _PC_MAX_INPUT
+  | FileNameLimit                 -- _PC_NAME_MAX
+  | PathNameLimit                 -- _PC_PATH_MAX
+  | PipeBufferLimit               -- _PC_PIPE_BUF
+
+  -- These are described as optional in POSIX:
+                                  -- _PC_ALLOC_SIZE_MIN
+                                  -- _PC_REC_INCR_XFER_SIZE
+                                  -- _PC_REC_MAX_XFER_SIZE
+                                  -- _PC_REC_MIN_XFER_SIZE
+                                  -- _PC_REC_XFER_ALIGN
+  | SymbolicLinkLimit             -- _PC_SYMLINK_MAX
+  | SetOwnerAndGroupIsRestricted  -- _PC_CHOWN_RESTRICTED
+  | FileNamesAreNotTruncated      -- _PC_NO_TRUNC
+  | VDisableChar                  -- _PC_VDISABLE
+  | AsyncIOAvailable              -- _PC_ASYNC_IO
+  | PrioIOAvailable               -- _PC_PRIO_IO
+  | SyncIOAvailable               -- _PC_SYNC_IO
 
 getPathVar :: FilePath -> PathVar -> IO Limit
 getPathVar _ _ = unsupported "getPathVar"
@@ -399,4 +401,3 @@ getFdPathVar :: Fd -> PathVar -> IO Limit
 getFdPathVar _ _ = unsupported "getFdPathVar"
 
 #endif
-

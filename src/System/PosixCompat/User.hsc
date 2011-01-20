@@ -88,15 +88,14 @@ getEffectiveUserName :: IO String
 getEffectiveUserName = unsupported "getEffectiveUserName"
 
 -- -----------------------------------------------------------------------------
--- The group database 
+-- The group database
 
-data GroupEntry =
- GroupEntry {
-  groupName    :: String,
-  groupPassword :: String,
-  groupID      :: GroupID,
-  groupMembers :: [String]
- } deriving (Show, Read, Eq)
+data GroupEntry = GroupEntry
+    { groupName     :: String
+    , groupPassword :: String
+    , groupID       :: GroupID
+    , groupMembers  :: [String]
+    } deriving (Show, Read, Eq)
 
 getGroupEntryForID :: GroupID -> IO GroupEntry
 getGroupEntryForID _ = unsupported "getGroupEntryForID"
@@ -110,16 +109,15 @@ getAllGroupEntries = return []
 -- -----------------------------------------------------------------------------
 -- The user database (pwd.h)
 
-data UserEntry =
- UserEntry {
-   userName      :: String,
-   userPassword  :: String,
-   userID        :: UserID,
-   userGroupID   :: GroupID,
-   userGecos     :: String,
-   homeDirectory :: String,
-   userShell     :: String
- } deriving (Show, Read, Eq)
+data UserEntry = UserEntry
+    { userName      :: String
+    , userPassword  :: String
+    , userID        :: UserID
+    , userGroupID   :: GroupID
+    , userGecos     :: String
+    , homeDirectory :: String
+    , userShell     :: String
+    } deriving (Show, Read, Eq)
 
 getUserEntryForID :: UserID -> IO UserEntry
 getUserEntryForID _ = unsupported "getUserEntryForID"

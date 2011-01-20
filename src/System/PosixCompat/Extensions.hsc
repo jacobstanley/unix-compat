@@ -18,7 +18,7 @@ type CMajor = CUInt
 type CMinor = CUInt
 
 -- | Gets the major number from a 'DeviceID' for a device file.
--- 
+--
 -- The portable implementation always returns @0@.
 deviceMajor :: DeviceID -> CMajor
 #ifdef UNIX_IMPL
@@ -30,7 +30,7 @@ deviceMajor _ = 0
 #endif
 
 -- | Gets the minor number from a 'DeviceID' for a device file.
--- 
+--
 -- The portable implementation always returns @0@.
 deviceMinor :: DeviceID -> CMinor
 #ifdef UNIX_IMPL
