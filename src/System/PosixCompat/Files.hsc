@@ -179,12 +179,21 @@ setFileCreationMask :: FileMode -> IO FileMode
 setFileCreationMask _ = return nullFileMode
 
 modeToPerms :: FileMode -> Permissions
+
+#ifdef DIRECTORY_1_0
+modeToPerms m = Permissions
+    { readable   = m .&. ownerReadMode    /= 0
+    , writable   = m .&. ownerWriteMode   /= 0
+    , executable = m .&. ownerExecuteMode /= 0
+    , searchable = m .&. ownerExecuteMode /= 0 }
+#else
 modeToPerms m =
     setOwnerReadable   (m .&. ownerReadMode    /= 0) $
     setOwnerWritable   (m .&. ownerWriteMode   /= 0) $
     setOwnerExecutable (m .&. ownerExecuteMode /= 0) $
     setOwnerSearchable (m .&. ownerExecuteMode /= 0) $
     emptyPermissions
+#endif
 
 -- -----------------------------------------------------------------------------
 -- access()

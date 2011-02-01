@@ -38,8 +38,15 @@ Library
   build-depends: base == 4.*
 
   if flag(portable) || os(windows)
-    build-depends: old-time == 1.0.*, directory == 1.1.*
+    build-depends: old-time == 1.0.*
     extensions: GeneralizedNewtypeDeriving
+
+    if impl(ghc < 7)
+      build-depends: directory == 1.0.*
+      cpp-options: -DDIRECTORY_1_0
+    else
+      build-depends: directory == 1.1.*
+
     if os(windows)
       cpp-options: -DMISSING_POSIX_TYPES
   else
