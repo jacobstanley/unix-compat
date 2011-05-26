@@ -2,7 +2,7 @@ name:           unix-compat
 version:        0.2.1.1
 synopsis:       Portable POSIX-compatibility layer.
 description:    This package provides portable implementations of parts
-                of the unix package. This package re-exports the unix 
+                of the unix package. This package re-exports the unix
                 package when available. When it isn't available,
                 portable implementations are used.
 
@@ -59,4 +59,3 @@ Library
     c-sources: cbits/HsUnixCompat.c
     if os(solaris)
       cc-options: -DSOLARIS
-
