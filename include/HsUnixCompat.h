@@ -1,3 +1,4 @@
+#include "HsUnixConfig.h"
 #include <sys/types.h>
 
 unsigned int unix_major(dev_t dev);
