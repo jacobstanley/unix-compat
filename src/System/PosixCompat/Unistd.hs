@@ -1,3 +1,5 @@
+{-# LANGUAGE ForeignFunctionInterface #-}
+
 {-|
 This module makes the operations exported by @System.Posix.Unistd@
 available on all platforms. On POSIX systems it re-exports operations from
@@ -22,6 +24,9 @@ import System.Posix.Unistd
 #else
 
 import Control.Concurrent (threadDelay)
+import Foreign.C.String (CString, peekCString)
+import Foreign.C.Types (CInt, CSize)
+import Foreign.Marshal.Array (allocaArray)
 
 data SystemID = SystemID {
       systemName :: String
@@ -32,7 +37,24 @@ data SystemID = SystemID {
     } deriving (Eq, Read, Show)
 
 getSystemID :: IO SystemID
-getSystemID = undefined
+getSystemID = do
+  let bufSize = 256
+  let call f = allocaArray bufSize $ \buf -> do
+	ok <- f buf (fromIntegral bufSize)
+	if ok == 1
+	  then peekCString buf
+	  else return ""
+  display <- call c_HsOSDisplayString
+  vers <- call c_HsOSVersionString
+  arch <- call c_HsOSArchString
+  node <- call c_HsOSNodeName
+  return SystemID {
+           systemName = "Windows"
+	 , nodeName = node
+	 , release = display
+         , version = vers
+	 , machine = arch
+	 }
 
 -- | Sleep for the specified duration (in seconds). Returns the time
 -- remaining (if the sleep was interrupted by a signal, for example).
@@ -63,5 +85,17 @@ usleep = threadDelay
 -- 'Control.Concurrent.threadDelay'.
 nanosleep :: Integer -> IO ()
 nanosleep nsecs = threadDelay (round (fromIntegral nsecs / 1000 :: Double))
+
+foreign import ccall "HsOSDisplayString" c_HsOSDisplayString
+    :: CString -> CSize -> IO CInt
+
+foreign import ccall "HsOSVersionString" c_HsOSVersionString
+    :: CString -> CSize -> IO CInt
+
+foreign import ccall "HsOSArchString" c_HsOSArchString
+    :: CString -> CSize -> IO CInt
+
+foreign import ccall "HsOSNodeName" c_HsOSNodeName
+    :: CString -> CSize -> IO CInt
 
 #endif

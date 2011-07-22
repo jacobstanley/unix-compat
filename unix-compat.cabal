@@ -50,6 +50,7 @@ Library
 
     if os(windows)
       cpp-options: -DMISSING_POSIX_TYPES
+      c-sources: cbits/HsUname.c
   else
     build-depends: unix == 2.4.*
     extensions: ForeignFunctionInterface
