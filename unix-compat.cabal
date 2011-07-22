@@ -32,6 +32,7 @@ Library
     System.PosixCompat.Files
     System.PosixCompat.Time
     System.PosixCompat.Types
+    System.PosixCompat.Unistd
     System.PosixCompat.User
   extensions: CPP
   ghc-options: -Wall
