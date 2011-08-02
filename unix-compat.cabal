@@ -52,7 +52,7 @@ Library
       cpp-options: -DMISSING_POSIX_TYPES
       c-sources: cbits/HsUname.c
   else
-    build-depends: unix == 2.4.*
+    build-depends: unix >= 2.4 && < 2.6
     extensions: ForeignFunctionInterface
     cpp-options: -DUNIX_IMPL
     include-dirs: include
