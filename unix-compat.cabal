@@ -9,7 +9,7 @@ description:    This package provides portable implementations of parts
 homepage:       http://github.com/jystic/unix-compat
 license:        BSD3
 license-file:   LICENSE
-author:         Björn Bringert, Duncan Coutts, Jacob Stanley
+author:         Björn Bringert, Duncan Coutts, Jacob Stanley, Bryan O'Sullivan
 maintainer:     Jacob Stanley <jacob@stanley.io>
 category:       System
 build-type:     Simple
