@@ -86,16 +86,16 @@ usleep = threadDelay
 nanosleep :: Integer -> IO ()
 nanosleep nsecs = threadDelay (round (fromIntegral nsecs / 1000 :: Double))
 
-foreign import ccall "HsOSDisplayString" c_HsOSDisplayString
-    :: CString -> CSize -> IO CInt
+foreign import ccall "HsOSDisplayString"
+    c_HsOSDisplayString :: CString -> CSize -> IO CInt
 
-foreign import ccall "HsOSVersionString" c_HsOSVersionString
-    :: CString -> CSize -> IO CInt
+foreign import ccall "HsOSVersionString"
+    c_HsOSVersionString :: CString -> CSize -> IO CInt
 
-foreign import ccall "HsOSArchString" c_HsOSArchString
-    :: CString -> CSize -> IO CInt
+foreign import ccall "HsOSArchString"
+    c_HsOSArchString :: CString -> CSize -> IO CInt
 
-foreign import ccall "HsOSNodeName" c_HsOSNodeName
-    :: CString -> CSize -> IO CInt
+foreign import ccall "HsOSNodeName"
+    c_HsOSNodeName :: CString -> CSize -> IO CInt
 
 #endif
