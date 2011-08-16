@@ -1,3 +1,5 @@
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+
 {-|
 This module re-exports the types from @System.Posix.Types@ on all platforms.
 

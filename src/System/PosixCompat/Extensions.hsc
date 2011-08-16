@@ -1,3 +1,5 @@
+{-# LANGUAGE ForeignFunctionInterface #-}
+
 -- | This module provides some functions not present in the unix package.
 module System.PosixCompat.Extensions (
          -- * Device IDs.

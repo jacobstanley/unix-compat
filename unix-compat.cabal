@@ -36,7 +36,6 @@ Library
 
   if os(windows)
     build-depends: old-time == 1.0.*
-    extensions: GeneralizedNewtypeDeriving
     c-sources: cbits/HsUname.c
 
     if impl(ghc < 7)
@@ -46,7 +45,6 @@ Library
       build-depends: directory == 1.1.*
   else
     build-depends: unix >= 2.4 && < 2.6
-    extensions: ForeignFunctionInterface
     include-dirs: include
     includes: HsUnixCompat.h
     install-includes: HsUnixCompat.h
