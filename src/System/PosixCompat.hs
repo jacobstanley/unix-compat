@@ -19,9 +19,9 @@ import System.PosixCompat.User
 -- | 'True' if unix-compat is using its portable implementation,
 --   or 'False' if the unix package is simply being re-exported.
 usingPortableImpl :: Bool
-#ifndef mingw32_HOST_OS
-usingPortableImpl = False
-#else
+#ifdef mingw32_HOST_OS
 usingPortableImpl = True
+#else
+usingPortableImpl = False
 #endif
 
