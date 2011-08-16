@@ -6,14 +6,14 @@ redefined by this module.
 -}
 module System.PosixCompat.Types (
     module System.Posix.Types,
-#ifdef MISSING_POSIX_TYPES
+#ifdef mingw32_HOST_OS
     UserID, GroupID, LinkCount
 #endif
   ) where
 
 import System.Posix.Types
 
-#ifdef MISSING_POSIX_TYPES
+#ifdef mingw32_HOST_OS
 
 import Data.Word (Word32)
 
@@ -36,4 +36,3 @@ instance Read LinkCount where readsPrec i s = [ (LinkCount x, s')
                                               | (x,s') <- readsPrec i s]
 
 #endif
-

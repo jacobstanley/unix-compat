@@ -17,7 +17,7 @@ module System.PosixCompat.Unistd
     , nanosleep
     ) where
 
-#ifdef UNIX_IMPL
+#ifndef mingw32_HOST_OS
 
 import System.Posix.Unistd
 

@@ -8,7 +8,7 @@ module System.PosixCompat.Time (
     epochTime,
   ) where
 
-#ifdef UNIX_IMPL
+#ifndef mingw32_HOST_OS
 
 import System.Posix.Time
 

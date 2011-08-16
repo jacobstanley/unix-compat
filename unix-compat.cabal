@@ -19,10 +19,6 @@ source-repository head
   type:     git
   location: git://github.com/jystic/unix-compat.git
 
-Flag portable
-  default: False
-  description: Force compiling in portable mode, useful for testing.
-
 Library
   hs-source-dirs: src
 
@@ -38,23 +34,19 @@ Library
   ghc-options: -Wall
   build-depends: base == 4.*
 
-  if flag(portable) || os(windows)
+  if os(windows)
     build-depends: old-time == 1.0.*
     extensions: GeneralizedNewtypeDeriving
+    c-sources: cbits/HsUname.c
 
     if impl(ghc < 7)
       build-depends: directory == 1.0.*
       cpp-options: -DDIRECTORY_1_0
     else
       build-depends: directory == 1.1.*
-
-    if os(windows)
-      cpp-options: -DMISSING_POSIX_TYPES
-      c-sources: cbits/HsUname.c
   else
     build-depends: unix >= 2.4 && < 2.6
     extensions: ForeignFunctionInterface
-    cpp-options: -DUNIX_IMPL
     include-dirs: include
     includes: HsUnixCompat.h
     install-includes: HsUnixCompat.h

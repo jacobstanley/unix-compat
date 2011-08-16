@@ -62,7 +62,7 @@ module System.PosixCompat.Files (
     PathVar(..), getPathVar, getFdPathVar,
  ) where
 
-#ifdef UNIX_IMPL
+#ifndef mingw32_HOST_OS
 
 #include "HsUnixCompat.h"
 
