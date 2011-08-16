@@ -40,21 +40,21 @@ getSystemID :: IO SystemID
 getSystemID = do
   let bufSize = 256
   let call f = allocaArray bufSize $ \buf -> do
-	ok <- f buf (fromIntegral bufSize)
-	if ok == 1
-	  then peekCString buf
-	  else return ""
+        ok <- f buf (fromIntegral bufSize)
+        if ok == 1
+          then peekCString buf
+          else return ""
   display <- call c_HsOSDisplayString
   vers <- call c_HsOSVersionString
   arch <- call c_HsOSArchString
   node <- call c_HsOSNodeName
   return SystemID {
            systemName = "Windows"
-	 , nodeName = node
-	 , release = display
+         , nodeName = node
+         , release = display
          , version = vers
-	 , machine = arch
-	 }
+         , machine = arch
+         }
 
 -- | Sleep for the specified duration (in seconds). Returns the time
 -- remaining (if the sleep was interrupted by a signal, for example).
