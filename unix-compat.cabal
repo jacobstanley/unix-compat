@@ -28,6 +28,7 @@ Library
     System.PosixCompat
     System.PosixCompat.Extensions
     System.PosixCompat.Files
+    System.PosixCompat.Temp
     System.PosixCompat.Time
     System.PosixCompat.Types
     System.PosixCompat.Unistd
@@ -35,7 +36,9 @@ Library
 
   if os(windows)
     build-depends: old-time == 1.0.*
-    c-sources: cbits/HsUname.c
+    c-sources:
+      cbits/HsUname.c
+      cbits/mktemp.c
 
     if impl(ghc < 7)
       build-depends: directory == 1.0.*
