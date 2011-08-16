@@ -1,3 +1,5 @@
+{-# LANGUAGE CPP #-}
+
 {-|
 This module makes the operations exported by @System.Posix.Time@
 available on all platforms. On POSIX systems it re-exports operations from

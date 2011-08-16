@@ -30,7 +30,6 @@ Library
     System.PosixCompat.Types
     System.PosixCompat.Unistd
     System.PosixCompat.User
-  extensions: CPP
   ghc-options: -Wall
   build-depends: base == 4.*
 

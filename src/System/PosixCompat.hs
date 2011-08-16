@@ -1,3 +1,5 @@
+{-# LANGUAGE CPP #-}
+
 {-|
 The @unix-compat@ package provides portable implementations of parts of the
 @unix@ package. On POSIX system it re-exports operations from the @unix@
