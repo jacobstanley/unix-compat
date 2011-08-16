@@ -6,30 +6,30 @@ available on all platforms. On POSIX systems it re-exports operations from
 module System.PosixCompat.User (
     -- * User environment
     -- ** Querying the user environment
-    getRealUserID,
-    getRealGroupID,
-    getEffectiveUserID,
-    getEffectiveGroupID,
-    getGroups,
-    getLoginName,
-    getEffectiveUserName,
+      getRealUserID
+    , getRealGroupID
+    , getEffectiveUserID
+    , getEffectiveGroupID
+    , getGroups
+    , getLoginName
+    , getEffectiveUserName
 
     -- *** The group database
-    GroupEntry(..),
-    getGroupEntryForID,
-    getGroupEntryForName,
-    getAllGroupEntries,
+    , GroupEntry(..)
+    , getGroupEntryForID
+    , getGroupEntryForName
+    , getAllGroupEntries
 
     -- *** The user database
-    UserEntry(..),
-    getUserEntryForID,
-    getUserEntryForName,
-    getAllUserEntries,
+    , UserEntry(..)
+    , getUserEntryForID
+    , getUserEntryForName
+    , getAllUserEntries
 
     -- ** Modifying the user environment
-    setUserID,
-    setGroupID
-  ) where
+    , setUserID
+    , setGroupID
+    ) where
 
 #ifndef mingw32_HOST_OS
 

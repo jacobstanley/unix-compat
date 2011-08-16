@@ -10,57 +10,94 @@ functions are only stubs./
 module System.PosixCompat.Files (
     -- * File modes
     -- FileMode exported by System.Posix.Types
-    unionFileModes, intersectFileModes,
-    nullFileMode,
-    ownerReadMode, ownerWriteMode, ownerExecuteMode, ownerModes,
-    groupReadMode, groupWriteMode, groupExecuteMode, groupModes,
-    otherReadMode, otherWriteMode, otherExecuteMode, otherModes,
-    setUserIDMode, setGroupIDMode,
-    stdFileMode,   accessModes,
+      unionFileModes
+    , intersectFileModes
+    , nullFileMode
+    , ownerReadMode
+    , ownerWriteMode
+    , ownerExecuteMode
+    , ownerModes
+    , groupReadMode
+    , groupWriteMode
+    , groupExecuteMode
+    , groupModes
+    , otherReadMode
+    , otherWriteMode
+    , otherExecuteMode
+    , otherModes
+    , setUserIDMode
+    , setGroupIDMode
+    , stdFileMode
+    , accessModes
 
     -- ** Setting file modes
-    setFileMode, setFdMode, setFileCreationMask,
+    , setFileMode
+    , setFdMode
+    , setFileCreationMask
 
     -- ** Checking file existence and permissions
-    fileAccess, fileExist,
+    , fileAccess
+    , fileExist
 
     -- * File status
-    FileStatus,
+    , FileStatus
     -- ** Obtaining file status
-    getFileStatus, getFdStatus, getSymbolicLinkStatus,
+    , getFileStatus
+    , getFdStatus
+    , getSymbolicLinkStatus
     -- ** Querying file status
-    deviceID, fileID, fileMode, linkCount, fileOwner, fileGroup,
-    specialDeviceID, fileSize, accessTime, modificationTime,
-    statusChangeTime,
-    isBlockDevice, isCharacterDevice, isNamedPipe, isRegularFile,
-    isDirectory, isSymbolicLink, isSocket,
+    , deviceID
+    , fileID
+    , fileMode
+    , linkCount
+    , fileOwner
+    , fileGroup
+    , specialDeviceID
+    , fileSize
+    , accessTime
+    , modificationTime
+    , statusChangeTime
+    , isBlockDevice
+    , isCharacterDevice
+    , isNamedPipe
+    , isRegularFile
+    , isDirectory
+    , isSymbolicLink
+    , isSocket
 
     -- * Creation
-    createNamedPipe,
-    createDevice,
+    , createNamedPipe
+    , createDevice
 
     -- * Hard links
-    createLink, removeLink,
+    , createLink
+    , removeLink
 
     -- * Symbolic links
-    createSymbolicLink, readSymbolicLink,
+    , createSymbolicLink
+    , readSymbolicLink
 
     -- * Renaming files
-    rename,
+    , rename
 
     -- * Changing file ownership
-    setOwnerAndGroup,  setFdOwnerAndGroup,
-    setSymbolicLinkOwnerAndGroup,
+    , setOwnerAndGroup
+    , setFdOwnerAndGroup
+    , setSymbolicLinkOwnerAndGroup
 
     -- * Changing file timestamps
-    setFileTimes, touchFile,
+    , setFileTimes
+    , touchFile
 
     -- * Setting file sizes
-    setFileSize, setFdSize,
+    , setFileSize
+    , setFdSize
 
     -- * Find system-specific limits for a file
-    PathVar(..), getPathVar, getFdPathVar,
- ) where
+    , PathVar(..)
+    , getPathVar
+    , getFdPathVar
+    ) where
 
 #ifndef mingw32_HOST_OS
 

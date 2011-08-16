@@ -2,10 +2,13 @@
 
 -- | This module provides some functions not present in the unix package.
 module System.PosixCompat.Extensions (
-         -- * Device IDs.
-         CMajor, CMinor,
-         deviceMajor, deviceMinor, makeDeviceID
-   ) where
+    -- * Device IDs.
+      CMajor
+    , CMinor
+    , deviceMajor
+    , deviceMinor
+    , makeDeviceID
+    ) where
 
 
 #ifndef mingw32_HOST_OS

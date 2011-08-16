@@ -4,12 +4,12 @@ The @unix-compat@ package provides portable implementations of parts of the
 package, on other platforms it emulates the operations as far as possible.
 -}
 module System.PosixCompat (
-    module System.PosixCompat.Files,
-    module System.PosixCompat.Time,
-    module System.PosixCompat.Types,
-    module System.PosixCompat.User,
-    usingPortableImpl
-  ) where
+      module System.PosixCompat.Files
+    , module System.PosixCompat.Time
+    , module System.PosixCompat.Types
+    , module System.PosixCompat.User
+    , usingPortableImpl
+    ) where
 
 import System.PosixCompat.Files
 import System.PosixCompat.Time

@@ -7,11 +7,13 @@ On Windows 'UserID', 'GroupID' and 'LinkCount' are missing, so they are
 redefined by this module.
 -}
 module System.PosixCompat.Types (
-    module System.Posix.Types,
+      module System.Posix.Types
 #ifdef mingw32_HOST_OS
-    UserID, GroupID, LinkCount
+    , UserID
+    , GroupID
+    , LinkCount
 #endif
-  ) where
+    ) where
 
 import System.Posix.Types
 

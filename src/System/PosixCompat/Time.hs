@@ -5,8 +5,8 @@ available on all platforms. On POSIX systems it re-exports operations from
 as possible.
 -}
 module System.PosixCompat.Time (
-    epochTime,
-  ) where
+      epochTime
+    ) where
 
 #ifndef mingw32_HOST_OS
 

@@ -6,8 +6,7 @@ available on all platforms. On POSIX systems it re-exports operations from
 @System.Posix.Unistd@, on other platforms it emulates the operations as far
 as possible.
 -}
-module System.PosixCompat.Unistd
-    (
+module System.PosixCompat.Unistd (
     -- * System environment
       SystemID(..)
     , getSystemID
