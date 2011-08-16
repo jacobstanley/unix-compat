@@ -21,6 +21,8 @@ source-repository head
 
 Library
   hs-source-dirs: src
+  ghc-options: -Wall
+  build-depends: base == 4.*
 
   exposed-modules:
     System.PosixCompat
@@ -30,8 +32,6 @@ Library
     System.PosixCompat.Types
     System.PosixCompat.Unistd
     System.PosixCompat.User
-  ghc-options: -Wall
-  build-depends: base == 4.*
 
   if os(windows)
     build-depends: old-time == 1.0.*
