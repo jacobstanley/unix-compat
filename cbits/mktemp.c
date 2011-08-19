@@ -40,7 +40,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <windows.h>
+#include <wincrypt.h>
 
+static int random(uint32_t *);
 static int hs__gettemp(char *, int *);
 
 static const unsigned char hs_padchar[] =
@@ -62,7 +65,7 @@ static int hs__gettemp(char *path, int *doopen)
 	char *pad;
 	struct stat sbuf;
 	int rval;
-	uint32_t randidx;
+	uint32_t randidx, randval;
 	char carrybuf[MAXPATHLEN];
 
 	for (trv = path; *trv != '\0'; ++trv)
@@ -80,7 +83,12 @@ static int hs__gettemp(char *path, int *doopen)
 
 	/* Fill space with random characters */
 	while (trv >= path && *trv == 'X') {
-		randidx = rand() % (sizeof(hs_padchar) - 1);
+        if (!random(&randval)) {
+            /* this should never happen */
+            errno = EIO;
+            return 0;
+        }
+		randidx = randval % (sizeof(hs_padchar) - 1);
 		*trv-- = hs_padchar[randidx];
 	}
 	start = trv + 1;
@@ -143,4 +151,22 @@ static int hs__gettemp(char *path, int *doopen)
 		}
 	}
 	/*NOTREACHED*/
+}
+
+static int random(uint32_t *value)
+{
+    /* This handle is never released. Windows will clean up when the process
+     * exits. Python takes this approach when emulating /dev/urandom, and if
+     * it's good enough for them, then it's good enough for us. */
+    static HCRYPTPROV context = 0;
+
+    if (context == 0)
+        if (!CryptAcquireContext(
+                &context, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT))
+            return 0;
+
+    if (!CryptGenRandom(context, sizeof *value, (BYTE *)value))
+        return 0;
+
+    return 1;
 }
