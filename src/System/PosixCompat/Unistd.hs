@@ -44,10 +44,10 @@ getSystemID = do
         if ok == 1
           then peekCString buf
           else return ""
-  display <- call c_HsOSDisplayString
-  vers <- call c_HsOSVersionString
-  arch <- call c_HsOSArchString
-  node <- call c_HsOSNodeName
+  display <- call c_os_display_string
+  vers <- call c_os_version_string
+  arch <- call c_os_arch_string
+  node <- call c_os_node_name
   return SystemID {
            systemName = "Windows"
          , nodeName = node
@@ -86,16 +86,16 @@ usleep = threadDelay
 nanosleep :: Integer -> IO ()
 nanosleep nsecs = threadDelay (round (fromIntegral nsecs / 1000 :: Double))
 
-foreign import ccall "HsOSDisplayString"
-    c_HsOSDisplayString :: CString -> CSize -> IO CInt
+foreign import ccall "unixcompat_os_display_string"
+    c_os_display_string :: CString -> CSize -> IO CInt
 
-foreign import ccall "HsOSVersionString"
-    c_HsOSVersionString :: CString -> CSize -> IO CInt
+foreign import ccall "unixcompat_os_version_string"
+    c_os_version_string :: CString -> CSize -> IO CInt
 
-foreign import ccall "HsOSArchString"
-    c_HsOSArchString :: CString -> CSize -> IO CInt
+foreign import ccall "unixcompat_os_arch_string"
+    c_os_arch_string :: CString -> CSize -> IO CInt
 
-foreign import ccall "HsOSNodeName"
-    c_HsOSNodeName :: CString -> CSize -> IO CInt
+foreign import ccall "unixcompat_os_node_name"
+    c_os_node_name :: CString -> CSize -> IO CInt
 
 #endif

@@ -105,7 +105,7 @@ typedef BOOL (WINAPI *PGPI)(DWORD, DWORD, DWORD, DWORD, PDWORD);
 # define VER_SUITE_WH_SERVER 0x00008000
 #endif
 
-int HsOSDisplayString(char *pszOS, size_t BUFSIZE)
+int unixcompat_os_display_string(char *pszOS, size_t BUFSIZE)
 {
     OSVERSIONINFOEX osvi;
     SYSTEM_INFO si;
@@ -306,7 +306,7 @@ int HsOSDisplayString(char *pszOS, size_t BUFSIZE)
     }
 }
 
-int HsOSVersionString(char *ptr, size_t bufsize)
+int unixcompat_os_version_string(char *ptr, size_t bufsize)
 {
     OSVERSIONINFOEX osvi;
     BOOL bOsVersionInfoEx;
@@ -331,7 +331,7 @@ int HsOSVersionString(char *ptr, size_t bufsize)
     return TRUE;
 }
 
-int HsOSArchString(char *ptr, size_t bufsize)
+int unixcompat_os_arch_string(char *ptr, size_t bufsize)
 {
     SYSTEM_INFO sysInfo;
 
@@ -352,7 +352,7 @@ int HsOSArchString(char *ptr, size_t bufsize)
     return TRUE;
 }
 
-int HsOSNodeName(char *ptr, size_t bufsize)
+int unixcompat_os_node_name(char *ptr, size_t bufsize)
 {
     DWORD sLength;
 

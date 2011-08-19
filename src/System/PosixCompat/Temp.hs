@@ -17,8 +17,8 @@ module System.PosixCompat.Temp (
 import System.Posix.Temp
 
 #elif defined(__GLASGOW_HASKELL__)
--- Windows w/ GHC, we have fdToHandle so
--- we can use the bundled hs_mkstemp
+-- Windows w/ GHC, we have fdToHandle so we
+-- can use our own implementation of mkstemp.
 
 import System.IO (Handle)
 import Foreign.C (CInt, CString, withCString, peekCString, throwErrnoIfMinus1)
@@ -36,7 +36,7 @@ mkstemp template = do
     h <- fdToHandle (fromIntegral fd)
     return (name, h)
 
-foreign import ccall unsafe "hs_mkstemp"
+foreign import ccall unsafe "unixcompat_mkstemp"
     c_mkstemp :: CString -> IO CInt
 
 #else

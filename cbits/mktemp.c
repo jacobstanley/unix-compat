@@ -44,22 +44,22 @@
 #include <wincrypt.h>
 
 static int random(uint32_t *);
-static int hs__gettemp(char *, int *);
+static int _gettemp(char *, int *);
 
-static const unsigned char hs_padchar[] =
+static const unsigned char padchar[] =
 "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-int hs_mkstemp(char *path)
+int unixcompat_mkstemp(char *path)
 {
 	int fd;
 
-	if (hs__gettemp(path, &fd))
+	if (_gettemp(path, &fd))
         return fd;
 
     return -1;
 }
 
-static int hs__gettemp(char *path, int *doopen)
+static int _gettemp(char *path, int *doopen)
 {
 	char *start, *trv, *suffp, *carryp;
 	char *pad;
@@ -88,8 +88,8 @@ static int hs__gettemp(char *path, int *doopen)
             errno = EIO;
             return 0;
         }
-		randidx = randval % (sizeof(hs_padchar) - 1);
-		*trv-- = hs_padchar[randidx];
+		randidx = randval % (sizeof(padchar) - 1);
+		*trv-- = padchar[randidx];
 	}
 	start = trv + 1;
 
@@ -131,14 +131,14 @@ static int hs__gettemp(char *path, int *doopen)
 			/* have we tried all possible permutations? */
 			if (trv == suffp)
 				return (0); /* yes - exit with EEXIST */
-			pad = strchr(hs_padchar, *trv);
+			pad = strchr(padchar, *trv);
 			if (pad == NULL) {
 				/* this should never happen */
 				errno = EIO;
 				return (0);
 			}
 			/* increment character */
-			*trv = (*++pad == '\0') ? hs_padchar[0] : *pad;
+			*trv = (*++pad == '\0') ? padchar[0] : *pad;
 			/* carry to next position? */
 			if (*trv == *carryp) {
 				/* increment position and loop */
