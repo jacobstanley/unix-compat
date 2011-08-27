@@ -51,9 +51,9 @@ static const unsigned char padchar[] =
 
 int unixcompat_mkstemp(char *path)
 {
-	int fd;
+    int fd;
 
-	if (_gettemp(path, &fd))
+    if (_gettemp(path, &fd))
         return fd;
 
     return -1;
@@ -61,96 +61,96 @@ int unixcompat_mkstemp(char *path)
 
 static int _gettemp(char *path, int *doopen)
 {
-	char *start, *trv, *suffp, *carryp;
-	char *pad;
-	struct stat sbuf;
-	int rval;
-	uint32_t randidx, randval;
-	char carrybuf[MAXPATHLEN];
+    char *start, *trv, *suffp, *carryp;
+    char *pad;
+    struct stat sbuf;
+    int rval;
+    uint32_t randidx, randval;
+    char carrybuf[MAXPATHLEN];
 
-	for (trv = path; *trv != '\0'; ++trv)
-		;
-	if (trv - path >= MAXPATHLEN) {
-		errno = ENAMETOOLONG;
-		return (0);
-	}
-	suffp = trv;
-	--trv;
-	if (trv < path || NULL != strchr(suffp, '/')) {
-		errno = EINVAL;
-		return (0);
-	}
+    for (trv = path; *trv != '\0'; ++trv)
+        ;
+    if (trv - path >= MAXPATHLEN) {
+        errno = ENAMETOOLONG;
+        return (0);
+    }
+    suffp = trv;
+    --trv;
+    if (trv < path || NULL != strchr(suffp, '/')) {
+        errno = EINVAL;
+        return (0);
+    }
 
-	/* Fill space with random characters */
-	while (trv >= path && *trv == 'X') {
+    /* Fill space with random characters */
+    while (trv >= path && *trv == 'X') {
         if (!random(&randval)) {
             /* this should never happen */
             errno = EIO;
             return 0;
         }
-		randidx = randval % (sizeof(padchar) - 1);
-		*trv-- = padchar[randidx];
-	}
-	start = trv + 1;
+        randidx = randval % (sizeof(padchar) - 1);
+        *trv-- = padchar[randidx];
+    }
+    start = trv + 1;
 
-	/* save first combination of random characters */
-	memcpy(carrybuf, start, suffp - start);
+    /* save first combination of random characters */
+    memcpy(carrybuf, start, suffp - start);
 
-	/*
-	 * check the target directory.
-	 */
-	if (doopen != NULL) {
-		for (; trv > path; --trv) {
-			if (*trv == '/') {
-				*trv = '\0';
-				rval = stat(path, &sbuf);
-				*trv = '/';
-				if (rval != 0)
-					return (0);
-				if (!S_ISDIR(sbuf.st_mode)) {
-					errno = ENOTDIR;
-					return (0);
-				}
-				break;
-			}
-		}
-	}
+    /*
+     * check the target directory.
+     */
+    if (doopen != NULL) {
+        for (; trv > path; --trv) {
+            if (*trv == '/') {
+                *trv = '\0';
+                rval = stat(path, &sbuf);
+                *trv = '/';
+                if (rval != 0)
+                    return (0);
+                if (!S_ISDIR(sbuf.st_mode)) {
+                    errno = ENOTDIR;
+                    return (0);
+                }
+                break;
+            }
+        }
+    }
 
-	for (;;) {
-		if (doopen) {
-			if ((*doopen =
-			    _open(path, O_CREAT|O_EXCL|O_RDWR, 0600)) >= 0)
-				return (1);
-			if (errno != EEXIST)
-				return (0);
-		} else if (stat(path, &sbuf))
-			return (errno == ENOENT);
+    for (;;) {
+        if (doopen) {
+            if ((*doopen =
+                _open(path, O_CREAT|O_EXCL|O_RDWR, 0600)) >= 0)
+                return (1);
+            if (errno != EEXIST)
+                return (0);
+        } else if (stat(path, &sbuf))
+            return (errno == ENOENT);
 
-		/* If we have a collision, cycle through the space of filenames */
-		for (trv = start, carryp = carrybuf;;) {
-			/* have we tried all possible permutations? */
-			if (trv == suffp)
-				return (0); /* yes - exit with EEXIST */
-			pad = strchr(padchar, *trv);
-			if (pad == NULL) {
-				/* this should never happen */
-				errno = EIO;
-				return (0);
-			}
-			/* increment character */
-			*trv = (*++pad == '\0') ? padchar[0] : *pad;
-			/* carry to next position? */
-			if (*trv == *carryp) {
-				/* increment position and loop */
-				++trv;
-				++carryp;
-			} else {
-				/* try with new name */
-				break;
-			}
-		}
-	}
-	/*NOTREACHED*/
+        /* If we have a collision, cycle through the space of filenames */
+        for (trv = start, carryp = carrybuf;;) {
+            /* have we tried all possible permutations? */
+            if (trv == suffp)
+                return (0); /* yes - exit with EEXIST */
+            pad = strchr(padchar, *trv);
+            if (pad == NULL) {
+                /* this should never happen */
+                errno = EIO;
+                return (0);
+            }
+            /* increment character */
+            *trv = (*++pad == '\0') ? padchar[0] : *pad;
+            /* carry to next position? */
+            if (*trv == *carryp) {
+                /* increment position and loop */
+                ++trv;
+                ++carryp;
+            } else {
+                /* try with new name */
+                break;
+            }
+        }
+    }
+    /*NOTREACHED*/
 }
 
 static int random(uint32_t *value)
