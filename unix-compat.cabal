@@ -35,7 +35,7 @@ Library
     System.PosixCompat.User
 
   if os(windows)
-    build-depends: old-time == 1.0.*
+    build-depends: old-time >= 1.0.0.0 && < 1.2.0.0
     c-sources:
       cbits/HsUname.c
       cbits/mktemp.c
