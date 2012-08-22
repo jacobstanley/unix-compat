@@ -46,7 +46,7 @@ Library
     else
       build-depends: directory == 1.1.*
   else
-    build-depends: unix >= 2.4 && < 2.6
+    build-depends: unix >= 2.4 && < 2.7
     include-dirs: include
     includes: HsUnixCompat.h
     install-includes: HsUnixCompat.h
