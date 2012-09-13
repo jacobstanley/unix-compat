@@ -25,7 +25,7 @@ import System.Posix.Unistd
 
 import Control.Concurrent (threadDelay)
 import Foreign.C.String (CString, peekCString)
-import Foreign.C.Types (CInt, CSize)
+import Foreign.C.Types (CInt(..), CSize(..))
 import Foreign.Marshal.Array (allocaArray)
 
 data SystemID = SystemID {

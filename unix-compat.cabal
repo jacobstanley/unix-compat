@@ -19,6 +19,10 @@ source-repository head
   type:     git
   location: git://github.com/jystic/unix-compat.git
 
+flag old-time
+  description: build against old-time package
+  default: False
+
 Library
   hs-source-dirs: src
   ghc-options: -Wall
@@ -35,16 +39,26 @@ Library
     System.PosixCompat.User
 
   if os(windows)
-    build-depends: old-time >= 1.0.0.0 && < 1.2.0.0
     c-sources:
       cbits/HsUname.c
       cbits/mktemp.c
 
-    if impl(ghc < 7)
-      build-depends: directory == 1.0.*
-      cpp-options: -DDIRECTORY_1_0
+    if flag(old-time)
+      build-depends: old-time >= 1.0.0.0 && < 1.2.0.0
+      cpp-options: -DOLD_TIME
+
+      if impl(ghc < 7)
+        build-depends: directory == 1.0.*
+        cpp-options: -DDIRECTORY_1_0
+      else
+        build-depends: directory == 1.1.*
     else
-      build-depends: directory == 1.1.*
+      build-depends: time >= 1.0 && < 1.5
+      build-depends: directory >= 1.2 && < 1.3
+
+    other-modules:
+      System.PosixCompat.Internal.Time
+
   else
     build-depends: unix >= 2.4 && < 2.7
     include-dirs: include

@@ -18,16 +18,16 @@ import System.Posix.Time
 
 import Control.Monad (liftM)
 import System.Posix.Types (EpochTime)
-import System.Time (ClockTime(..), getClockTime)
+
+import System.PosixCompat.Internal.Time (
+      getClockTime, clockTimeToEpochTime
+    )
 
 -- | The portable version of @epochTime@ calls 'getClockTime' to obtain the
 --   number of seconds that have elapsed since the epoch (Jan 01 00:00:00 GMT
 --   1970).
 epochTime :: IO EpochTime
 epochTime = liftM clockTimeToEpochTime getClockTime
-
-clockTimeToEpochTime :: ClockTime -> EpochTime
-clockTimeToEpochTime (TOD s _) = fromInteger s
 
 #endif
 

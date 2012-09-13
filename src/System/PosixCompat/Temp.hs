@@ -21,7 +21,7 @@ import System.Posix.Temp
 -- can use our own implementation of mkstemp.
 
 import System.IO (Handle)
-import Foreign.C (CInt, CString, withCString, peekCString, throwErrnoIfMinus1)
+import Foreign.C (CInt(..), CString, withCString, peekCString, throwErrnoIfMinus1)
 import GHC.IO.Handle.FD (fdToHandle)
 
 -- | 'mkstemp' - make a unique filename and open it for
