@@ -124,7 +124,11 @@ import System.Directory
 import System.IO (IOMode(..), openFile, hFileSize, hSetFileSize, hClose)
 import System.IO.Error
 import System.PosixCompat.Types
-import System.Time (ClockTime(..), getClockTime)
+
+import System.PosixCompat.Internal.Time (
+      getClockTime, clockTimeToEpochTime
+    , modificationTimeToEpochTime
+    )
 
 #ifdef __GLASGOW_HASKELL__
 import GHC.IO.Handle.FD (fdToHandle)
@@ -297,7 +301,7 @@ getFileStatus path =
     do perm  <- liftM permsToMode $ getPermissions path
        typ   <- getFileType path
        size  <- if typ == regularFileMode then getFileSize path else return 0
-       mtime <- liftM clockTimeToEpochTime $ getModificationTime path
+       mtime <- liftM modificationTimeToEpochTime $ getModificationTime path
        return $ FileStatus
                 { deviceID         = -1
                 , fileID           = -1
@@ -332,10 +336,6 @@ getFileType path =
 getFileSize :: FilePath -> IO FileOffset
 getFileSize path =
     bracket (openFile path ReadMode) hClose (liftM fromIntegral . hFileSize)
-
-clockTimeToEpochTime :: ClockTime -> EpochTime
-clockTimeToEpochTime (TOD s _) = fromInteger s
-
 
 getFdStatus :: Fd -> IO FileStatus
 getFdStatus _ = unsupported "getFdStatus"
