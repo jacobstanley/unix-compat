@@ -60,7 +60,7 @@ Library
       System.PosixCompat.Internal.Time
 
   else
-    build-depends: unix >= 2.4 && < 2.7
+    build-depends: unix >= 2.4 && < 2.8
     include-dirs: include
     includes: HsUnixCompat.h
     install-includes: HsUnixCompat.h
