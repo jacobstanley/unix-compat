@@ -1,5 +1,5 @@
 name:           unix-compat
-version:        0.4.1.0
+version:        0.4.1.1
 synopsis:       Portable POSIX-compatibility layer.
 description:    This package provides portable implementations of parts
                 of the unix package. This package re-exports the unix
