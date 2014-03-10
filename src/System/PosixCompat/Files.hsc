@@ -124,6 +124,7 @@ import System.Directory
 import System.IO (IOMode(..), openFile, hFileSize, hSetFileSize, hClose)
 import System.IO.Error
 import System.PosixCompat.Types
+import System.Win32.File hiding (getFileType)
 
 import System.PosixCompat.Internal.Time (
       getClockTime, clockTimeToEpochTime
@@ -297,23 +298,35 @@ isSocket stat =
     (fileMode stat `intersectFileModes` fileTypeModes) == socketMode
 
 getFileStatus :: FilePath -> IO FileStatus
-getFileStatus path =
-    do perm  <- liftM permsToMode $ getPermissions path
-       typ   <- getFileType path
-       size  <- if typ == regularFileMode then getFileSize path else return 0
-       mtime <- liftM modificationTimeToEpochTime $ getModificationTime path
-       return $ FileStatus
-                { deviceID         = -1
-                , fileID           = -1
-                , fileMode         = typ .|. perm
-                , linkCount        = 1
-                , fileOwner        = 0
-                , fileGroup        = 0
-                , specialDeviceID  = 0
-                , fileSize         = size
-                , accessTime       = mtime
-                , modificationTime = mtime
-                , statusChangeTime = mtime }
+getFileStatus path = do
+    perm  <- liftM permsToMode (getPermissions path)
+    typ   <- getFileType path
+    size  <- if typ == regularFileMode then getFileSize path else return 0
+    mtime <- liftM modificationTimeToEpochTime (getModificationTime path)
+    info  <- bracket openPath closeHandle getFileInformationByHandle
+    return $ FileStatus
+             { deviceID         = fromIntegral (bhfiVolumeSerialNumber info)
+             , fileID           = fromIntegral (bhfiFileIndex info)
+             , fileMode         = typ .|. perm
+             , linkCount        = fromIntegral (bhfiNumberOfLinks info)
+             , fileOwner        = 0
+             , fileGroup        = 0
+             , specialDeviceID  = 0
+             , fileSize         = size
+             , accessTime       = mtime
+             , modificationTime = mtime
+             , statusChangeTime = mtime }
+  where
+    openPath = createFile path
+                          gENERIC_READ
+                          (fILE_SHARE_READ .|. fILE_SHARE_WRITE .|. fILE_SHARE_DELETE)
+                          Nothing
+                          oPEN_EXISTING
+                          sECURITY_ANONYMOUS
+                          Nothing
+
+    -- Win32 doesn't define this for some reason???
+    fILE_SHARE_DELETE = 0x4
 
 permsToMode :: Permissions -> FileMode
 permsToMode perms = r .|. w .|. x
