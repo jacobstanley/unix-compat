@@ -8,19 +8,28 @@ On Windows 'UserID', 'GroupID' and 'LinkCount' are missing, so they are
 redefined by this module.
 -}
 module System.PosixCompat.Types (
-      module System.Posix.Types
 #ifdef mingw32_HOST_OS
+     module AllPosixTypesButFileID
+    , FileID
     , UserID
     , GroupID
     , LinkCount
+#else
+     module System.Posix.Types
 #endif
     ) where
 
-import System.Posix.Types
-
 #ifdef mingw32_HOST_OS
+-- Because base defines FileID = CIno = Int16, it must be overriden.
+import System.Posix.Types as AllPosixTypesButFileID hiding (FileID)
 
-import Data.Word (Word32)
+import Data.Word (Word32, Word64)
+
+newtype FileID = FileID Word64
+  deriving (Eq, Ord, Enum, Bounded, Integral, Num, Real)
+instance Show FileID where show (FileID x) = show x
+instance Read FileID where readsPrec i s = [ (FileID x, s')
+                                           | (x,s') <- readsPrec i s]
 
 newtype UserID = UserID Word32
   deriving (Eq, Ord, Enum, Bounded, Integral, Num, Real)
@@ -40,4 +49,6 @@ instance Show LinkCount where show (LinkCount x) = show x
 instance Read LinkCount where readsPrec i s = [ (LinkCount x, s')
                                               | (x,s') <- readsPrec i s]
 
+#else
+import System.Posix.Types
 #endif
