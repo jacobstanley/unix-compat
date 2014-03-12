@@ -318,15 +318,12 @@ getFileStatus path = do
              , statusChangeTime = mtime }
   where
     openPath = createFile path
-                          gENERIC_READ
-                          (fILE_SHARE_READ .|. fILE_SHARE_WRITE .|. fILE_SHARE_DELETE)
-                          Nothing
-                          oPEN_EXISTING
-                          sECURITY_ANONYMOUS
-                          Nothing
-
-    -- Win32 doesn't define this for some reason???
-    fILE_SHARE_DELETE = 0x4
+                 gENERIC_READ
+                 (fILE_SHARE_READ .|. fILE_SHARE_WRITE .|. fILE_SHARE_DELETE)
+                 Nothing
+                 oPEN_EXISTING
+                 sECURITY_ANONYMOUS
+                 Nothing
 
 permsToMode :: Permissions -> FileMode
 permsToMode perms = r .|. w .|. x
