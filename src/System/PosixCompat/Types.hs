@@ -20,7 +20,9 @@ module System.PosixCompat.Types (
     ) where
 
 #ifdef mingw32_HOST_OS
--- Because base defines FileID = CIno = Int16, it must be overriden.
+-- Since CIno (FileID's underlying type) reflects <sys/type.h> ino_t,
+-- which mingw defines as short int (int16), it must be overriden to
+-- match the size of windows fileIndex (word64).
 import System.Posix.Types as AllPosixTypesButFileID hiding (FileID)
 
 import Data.Word (Word32, Word64)
