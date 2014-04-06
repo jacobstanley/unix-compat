@@ -322,7 +322,7 @@ getFileStatus path = do
                  (fILE_SHARE_READ .|. fILE_SHARE_WRITE .|. fILE_SHARE_DELETE)
                  Nothing
                  oPEN_EXISTING
-                 sECURITY_ANONYMOUS
+                 (sECURITY_ANONYMOUS .|. fILE_FLAG_BACKUP_SEMANTICS)
                  Nothing
 
 permsToMode :: Permissions -> FileMode
