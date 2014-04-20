@@ -104,7 +104,7 @@ static int _gettemp(char *path, int *doopen)
         for (; trv > path; --trv) {
             if (*trv == '/') {
                 *trv = '\0';
-                rval = stat(path, &sbuf);
+                rval = _stat(path, &sbuf);
                 *trv = '/';
                 if (rval != 0)
                     return (0);
@@ -124,7 +124,7 @@ static int _gettemp(char *path, int *doopen)
                 return (1);
             if (errno != EEXIST)
                 return (0);
-        } else if (stat(path, &sbuf))
+        } else if (_stat(path, &sbuf))
             return (errno == ENOENT);
 
         /* If we have a collision, cycle through the space of filenames */

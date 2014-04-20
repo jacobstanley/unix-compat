@@ -22,7 +22,7 @@ static void StringCchCat(char *dest, size_t bufsize, const char *src)
     strcat(dest, src);
 }
 
-#define StringCchPrintf snprintf
+#define StringCchPrintf _snprintf
 
 #endif
 
