@@ -120,7 +120,7 @@ import Control.Exception (bracket)
 import Control.Monad (liftM, liftM2)
 import Data.Bits ((.|.), (.&.))
 import Prelude hiding (read)
-import System.Directory
+import System.Directory hiding (isSymbolicLink)
 import System.IO (IOMode(..), openFile, hFileSize, hSetFileSize, hClose)
 import System.IO.Error
 import System.PosixCompat.Types
