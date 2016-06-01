@@ -120,7 +120,14 @@ import Control.Exception (bracket)
 import Control.Monad (liftM, liftM2)
 import Data.Bits ((.|.), (.&.))
 import Prelude hiding (read)
-import System.Directory
+import System.Directory (Permissions, emptyPermissions)
+import System.Directory (getPermissions, setPermissions)
+import System.Directory (readable, setOwnerReadable)
+import System.Directory (writable, setOwnerWritable)
+import System.Directory (executable, setOwnerExecutable)
+import System.Directory (searchable, setOwnerSearchable)
+import System.Directory (doesFileExist, doesDirectoryExist)
+import System.Directory (getModificationTime, renameFile)
 import System.IO (IOMode(..), openFile, hFileSize, hSetFileSize, hClose)
 import System.IO.Error
 import System.PosixCompat.Types
