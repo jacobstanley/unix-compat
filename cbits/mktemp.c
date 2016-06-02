@@ -64,7 +64,7 @@ static int _gettemp(char *path, int *doopen)
 {
     char *start, *trv, *suffp, *carryp;
     char *pad;
-    struct stat sbuf;
+    struct _stat sbuf;
     int rval;
     uint32_t randidx, randval;
     char carrybuf[MAXPATHLEN];
