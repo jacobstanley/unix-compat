@@ -119,6 +119,8 @@ setSymbolicLinkOwnerAndGroup _ _ _ = return ()
 import Control.Exception (bracket)
 import Control.Monad (liftM, liftM2)
 import Data.Bits ((.|.), (.&.))
+import Data.Int (Int64)
+import Foreign.C.Types (CTime(..))
 import Prelude hiding (read)
 import System.Directory (Permissions, emptyPermissions)
 import System.Directory (getPermissions, setPermissions)
@@ -132,6 +134,7 @@ import System.IO (IOMode(..), openFile, hFileSize, hSetFileSize, hClose)
 import System.IO.Error
 import System.PosixCompat.Types
 import System.Win32.File hiding (getFileType)
+import System.Win32.Time (FILETIME(..), getFileTime, setFileTime)
 
 import System.PosixCompat.Internal.Time (
       getClockTime, clockTimeToEpochTime
@@ -409,7 +412,28 @@ setSymbolicLinkOwnerAndGroup _ _ _ = return ()
 -- utime()
 
 setFileTimes :: FilePath -> EpochTime -> EpochTime -> IO ()
-setFileTimes _ _ _ = unsupported "setFileTimes"
+setFileTimes file atime mtime =
+  bracket openFileHandle closeHandle $ \handle -> do
+    (creationTime, _, _) <- getFileTime handle
+    setFileTime
+      handle
+      creationTime
+      (epochTimeToFileTime atime)
+      (epochTimeToFileTime mtime)
+  where
+    openFileHandle = createFile file
+                       gENERIC_WRITE
+                       fILE_SHARE_NONE
+                       Nothing
+                       oPEN_EXISTING
+                       fILE_ATTRIBUTE_NORMAL
+                       Nothing
+
+    -- based on https://support.microsoft.com/en-us/kb/167296
+    epochTimeToFileTime (CTime t) = FILETIME (fromIntegral ll)
+      where
+        ll :: Int64
+        ll = t * 10000000 + 116444736000000000
 
 touchFile :: FilePath -> IO ()
 touchFile name =
