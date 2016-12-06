@@ -433,7 +433,7 @@ setFileTimes file atime mtime =
     epochTimeToFileTime (CTime t) = FILETIME (fromIntegral ll)
       where
         ll :: Int64
-        ll = t * 10000000 + 116444736000000000
+        ll = fromIntegral t * 10000000 + 116444736000000000
 
 touchFile :: FilePath -> IO ()
 touchFile name =
