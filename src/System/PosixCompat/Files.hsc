@@ -389,10 +389,10 @@ readSymbolicLink :: FilePath -> IO FilePath
 readSymbolicLink _ = unsupported "readSymbolicLink"
 
 -- -----------------------------------------------------------------------------
--- Renaming files
+-- Renaming
 
 rename :: FilePath -> FilePath -> IO ()
-rename name1 name2 = renameFile name1 name2
+rename name1 name2 = moveFileEx name1 name2 mOVEFILE_REPLACE_EXISTING
 
 -- -----------------------------------------------------------------------------
 -- chown()
