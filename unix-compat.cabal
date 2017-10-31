@@ -44,7 +44,7 @@ Library
       cbits/mktemp.c
 
     extra-libraries: msvcrt
-    build-depends: Win32 >= 2.3.0.2
+    build-depends: Win32 >= 2.5.0.0
 
     if flag(old-time)
       build-depends: old-time >= 1.0.0.0 && < 1.2.0.0

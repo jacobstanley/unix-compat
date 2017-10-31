@@ -134,6 +134,7 @@ import System.IO (IOMode(..), openFile, hFileSize, hSetFileSize, hClose)
 import System.IO.Error
 import System.PosixCompat.Types
 import System.Win32.File hiding (getFileType)
+import System.Win32.HardLink (createHardLink)
 import System.Win32.Time (FILETIME(..), getFileTime, setFileTime)
 
 import System.PosixCompat.Internal.Time (
@@ -373,7 +374,7 @@ createDevice _ _ _ = unsupported "createDevice"
 -- Hard links
 
 createLink :: FilePath -> FilePath -> IO ()
-createLink _ _ = unsupported "createLink"
+createLink = createHardLink
 
 removeLink :: FilePath -> IO ()
 removeLink _ = unsupported "removeLink"
