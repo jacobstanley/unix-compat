@@ -392,7 +392,11 @@ readSymbolicLink _ = unsupported "readSymbolicLink"
 -- Renaming
 
 rename :: FilePath -> FilePath -> IO ()
+#if MIN_VERSION_Win32(2, 6, 0)
+rename name1 name2 = moveFileEx name1 (Just name2) mOVEFILE_REPLACE_EXISTING
+#else
 rename name1 name2 = moveFileEx name1 name2 mOVEFILE_REPLACE_EXISTING
+#endif
 
 -- -----------------------------------------------------------------------------
 -- chown()
