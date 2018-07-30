@@ -2,6 +2,8 @@
 
 #ifdef SOLARIS
 #include <sys/mkdev.h>
+#elif defined(__GLIBC__)
+#include <sys/sysmacros.h>
 #endif
 
 unsigned int unix_major(dev_t dev)
