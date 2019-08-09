@@ -2,7 +2,7 @@
 
 #ifdef SOLARIS
 #include <sys/mkdev.h>
-#elif defined(__GLIBC__)
+#elif defined(__linux__)
 #include <sys/sysmacros.h>
 #endif
 
