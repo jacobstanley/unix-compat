@@ -129,7 +129,7 @@ import System.Directory (writable, setOwnerWritable)
 import System.Directory (executable, setOwnerExecutable)
 import System.Directory (searchable, setOwnerSearchable)
 import System.Directory (doesFileExist, doesDirectoryExist)
-import System.Directory (getModificationTime, renameFile)
+import System.Directory (getModificationTime)
 import System.IO (IOMode(..), openFile, hFileSize, hSetFileSize, hClose)
 import System.IO.Error
 import System.PosixCompat.Types
