@@ -59,6 +59,9 @@ module System.PosixCompat.Files (
     , accessTime
     , modificationTime
     , statusChangeTime
+    , accessTimeHiRes
+    , modificationTimeHiRes
+    , statusChangeTimeHiRes
     , isBlockDevice
     , isCharacterDevice
     , isNamedPipe
@@ -120,6 +123,7 @@ import Control.Exception (bracket)
 import Control.Monad (liftM, liftM2)
 import Data.Bits ((.|.), (.&.))
 import Data.Int (Int64)
+import Data.Time.Clock.POSIX (POSIXTime)
 import Foreign.C.Types (CTime(..))
 import Prelude hiding (read)
 import System.Directory (Permissions, emptyPermissions)
@@ -129,8 +133,7 @@ import System.Directory (writable, setOwnerWritable)
 import System.Directory (executable, setOwnerExecutable)
 import System.Directory (searchable, setOwnerSearchable)
 import System.Directory (doesFileExist, doesDirectoryExist)
-import System.Directory (getModificationTime, renameFile)
-import System.IO (IOMode(..), openFile, hFileSize, hSetFileSize, hClose)
+import System.IO (IOMode(..), openFile, hSetFileSize, hClose)
 import System.IO.Error
 import System.PosixCompat.Types
 import System.Win32.File hiding (getFileType)
@@ -139,7 +142,6 @@ import System.Win32.Time (FILETIME(..), getFileTime, setFileTime)
 
 import System.PosixCompat.Internal.Time (
       getClockTime, clockTimeToEpochTime
-    , modificationTimeToEpochTime
     )
 
 #ifdef __GLASGOW_HASKELL__
@@ -267,17 +269,20 @@ fileExist name = liftM2 (||) (doesFileExist name) (doesDirectoryExist name)
 -- stat() support
 
 data FileStatus = FileStatus
-    { deviceID         :: DeviceID
-    , fileID           :: FileID
-    , fileMode         :: FileMode
-    , linkCount        :: LinkCount
-    , fileOwner        :: UserID
-    , fileGroup        :: GroupID
-    , specialDeviceID  :: DeviceID
-    , fileSize         :: FileOffset
-    , accessTime       :: EpochTime
-    , modificationTime :: EpochTime
-    , statusChangeTime :: EpochTime
+    { deviceID              :: DeviceID
+    , fileID                :: FileID
+    , fileMode              :: FileMode
+    , linkCount             :: LinkCount
+    , fileOwner             :: UserID
+    , fileGroup             :: GroupID
+    , specialDeviceID       :: DeviceID
+    , fileSize              :: FileOffset
+    , accessTime            :: EpochTime
+    , modificationTime      :: EpochTime
+    , statusChangeTime      :: EpochTime
+    , accessTimeHiRes       :: POSIXTime
+    , modificationTimeHiRes :: POSIXTime
+    , statusChangeTimeHiRes :: POSIXTime
     }
 
 isBlockDevice :: FileStatus -> Bool
@@ -312,9 +317,10 @@ getFileStatus :: FilePath -> IO FileStatus
 getFileStatus path = do
     perm  <- liftM permsToMode (getPermissions path)
     typ   <- getFileType path
-    size  <- if typ == regularFileMode then getFileSize path else return 0
-    mtime <- liftM modificationTimeToEpochTime (getModificationTime path)
     info  <- bracket openPath closeHandle getFileInformationByHandle
+    let atime = windowsToPosixTime (bhfiLastAccessTime info)
+        mtime = windowsToPosixTime (bhfiLastWriteTime info)
+        ctime = windowsToPosixTime (bhfiCreationTime info)
     return $ FileStatus
              { deviceID         = fromIntegral (bhfiVolumeSerialNumber info)
              , fileID           = fromIntegral (bhfiFileIndex info)
@@ -323,10 +329,14 @@ getFileStatus path = do
              , fileOwner        = 0
              , fileGroup        = 0
              , specialDeviceID  = 0
-             , fileSize         = size
-             , accessTime       = mtime
-             , modificationTime = mtime
-             , statusChangeTime = mtime }
+             , fileSize         = fromIntegral (bhfiSize info)
+             , accessTime       = posixTimeToEpochTime atime
+             , modificationTime = posixTimeToEpochTime mtime
+             , statusChangeTime = posixTimeToEpochTime mtime
+             , accessTimeHiRes       = atime
+             , modificationTimeHiRes = mtime
+             , statusChangeTimeHiRes = ctime
+             }
   where
     openPath = createFile path
                  gENERIC_READ
@@ -335,6 +345,32 @@ getFileStatus path = do
                  oPEN_EXISTING
                  (sECURITY_ANONYMOUS .|. fILE_FLAG_BACKUP_SEMANTICS)
                  Nothing
+
+-- | Convert a 'POSIXTime' (synomym for 'Data.Time.Clock.NominalDiffTime')
+-- into an 'EpochTime' (integral number of seconds since epoch). This merely
+-- throws away the fractional part.
+posixTimeToEpochTime :: POSIXTime -> EpochTime
+posixTimeToEpochTime = fromInteger . floor
+
+-- three function stolen from System.Directory.Internals.Windows:
+
+-- | Difference between the Windows and POSIX epochs in units of 100ns.
+windowsPosixEpochDifference :: Num a => a
+windowsPosixEpochDifference = 116444736000000000
+
+-- | Convert from Windows time to POSIX time.
+windowsToPosixTime :: FILETIME -> POSIXTime
+windowsToPosixTime (FILETIME t) =
+  (fromIntegral t - windowsPosixEpochDifference) / 10000000
+
+{- will be needed to /set/ high res timestamps, not yet supported
+
+-- | Convert from POSIX time to Windows time.  This is lossy as Windows time
+--   has a resolution of only 100ns.
+posixToWindowsTime :: POSIXTime -> FILETIME
+posixToWindowsTime t = FILETIME $
+  truncate (t * 10000000 + windowsPosixEpochDifference)
+-}
 
 permsToMode :: Permissions -> FileMode
 permsToMode perms = r .|. w .|. x
@@ -353,10 +389,6 @@ getFileType path =
             else do d <- doesDirectoryExist path
                     if d then return directoryMode
                          else unsupported "Unknown file type."
-
-getFileSize :: FilePath -> IO FileOffset
-getFileSize path =
-    bracket (openFile path ReadMode) hClose (liftM fromIntegral . hFileSize)
 
 getFdStatus :: Fd -> IO FileStatus
 getFdStatus _ = unsupported "getFdStatus"
