@@ -3,3 +3,4 @@
 /test/dist/
 *.swp
 .ghc.*
+.stack-work
