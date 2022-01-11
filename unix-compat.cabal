@@ -71,3 +71,71 @@ Library
     c-sources: cbits/HsUnixCompat.c
     if os(solaris)
       cc-options: -DSOLARIS
+
+Test-Suite unix-compat-testsuite
+  default-language: Haskell2010
+  type: exitcode-stdio-1.0
+  hs-source-dirs: tests
+  ghc-options: -Wall
+  main-is: main.hs
+  
+  other-modules:
+     MkstempSpec
+     LinksSpec
+
+  -- ghc-options:
+  --   -Wall
+  --   -fwarn-tabs
+  --   -funbox-strict-fields
+  --   -threaded
+  --   -fno-warn-unused-do-bind
+  --   -fno-warn-type-defaults
+
+  -- extensions:
+  --   OverloadedStrings
+  --   ExtendedDefaultRules
+
+  -- if flag(lifted)
+  --    cpp-options: -DLIFTED
+
+  build-depends:
+      unix-compat
+    , base == 4.*
+    , monad-parallel
+    , hspec
+    , HUnit
+    , directory
+    , extra
+  
+  if os(windows)
+    -- c-sources:
+    --   cbits/HsUname.c
+    --   cbits/mktemp.c
+
+    -- extra-libraries: msvcrt
+    -- build-depends: Win32 >= 2.5.0.0
+
+    if flag(old-time)
+      build-depends: old-time >= 1.0.0.0 && < 1.2.0.0
+      cpp-options: -DOLD_TIME
+
+      if impl(ghc < 7)
+        build-depends: directory == 1.0.*
+        cpp-options: -DDIRECTORY_1_0
+      else
+        build-depends: directory == 1.1.*
+    else
+      build-depends: time >= 1.0 && < 1.10
+      build-depends: directory >= 1.2 && < 1.4
+
+    -- other-modules:
+    --   System.PosixCompat.Internal.Time
+
+  else
+    -- build-depends: unix >= 2.4 && < 2.9
+    -- include-dirs: include
+    -- includes: HsUnixCompat.h
+    -- install-includes: HsUnixCompat.h
+    -- c-sources: cbits/HsUnixCompat.c
+    if os(solaris)
+      cc-options: -DSOLARIS
