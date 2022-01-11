@@ -57,7 +57,7 @@ Library
       else
         build-depends: directory == 1.1.*
     else
-      build-depends: time >= 1.0 && < 1.10
+      build-depends: time >= 1.0 && < 1.13
       build-depends: directory >= 1.2 && < 1.4
 
     other-modules:

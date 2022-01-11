@@ -139,6 +139,7 @@ import System.PosixCompat.Types
 import System.Win32.File hiding (getFileType)
 import System.Win32.HardLink (createHardLink)
 import System.Win32.Time (FILETIME(..), getFileTime, setFileTime)
+import System.Win32.Types (HANDLE)
 
 import System.PosixCompat.Internal.Time (
       getClockTime, clockTimeToEpochTime
@@ -452,7 +453,7 @@ setFileTimes :: FilePath -> EpochTime -> EpochTime -> IO ()
 setFileTimes file atime mtime =
   bracket openFileHandle closeHandle $ \handle -> do
     (creationTime, _, _) <- getFileTime handle
-    setFileTime
+    setFileTimeCompat
       handle
       creationTime
       (epochTimeToFileTime atime)
@@ -471,6 +472,14 @@ setFileTimes file atime mtime =
       where
         ll :: Int64
         ll = fromIntegral t * 10000000 + 116444736000000000
+
+setFileTimeCompat :: HANDLE -> FILETIME -> FILETIME -> FILETIME -> IO ()
+setFileTimeCompat h crt acc wrt =
+#if MIN_VERSION_Win32(2, 12, 0)
+    setFileTime h (Just crt) (Just acc) (Just wrt)
+#else
+    setFileTime h crt acc wrt
+#endif
 
 touchFile :: FilePath -> IO ()
 touchFile name =
