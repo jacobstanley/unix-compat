@@ -17,7 +17,7 @@ cabal-version:  >= 1.10
 
 source-repository head
   type:     git
-  location: git://github.com/jacobstanley/unix-compat.git
+  location: git@github.com:jacobstanley/unix-compat.git
 
 flag old-time
   description: build against old-time package
@@ -64,7 +64,7 @@ Library
       System.PosixCompat.Internal.Time
 
   else
-    build-depends: unix >= 2.4 && < 2.9
+    build-depends: unix >= 2.6 && < 2.9
     include-dirs: include
     includes: HsUnixCompat.h
     install-includes: HsUnixCompat.h
@@ -78,7 +78,7 @@ Test-Suite unix-compat-testsuite
   hs-source-dirs: tests
   ghc-options: -Wall
   main-is: main.hs
-  
+
   other-modules:
      MkstempSpec
      LinksSpec
@@ -106,7 +106,7 @@ Test-Suite unix-compat-testsuite
     , HUnit
     , directory
     , extra
-  
+
   if os(windows)
     -- c-sources:
     --   cbits/HsUname.c
