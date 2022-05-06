@@ -122,6 +122,7 @@ setSymbolicLinkOwnerAndGroup _ _ _ = return ()
 import Control.Exception (bracket)
 import Control.Monad (liftM, liftM2)
 import Data.Bits ((.|.), (.&.))
+import Data.Char (toLower)
 import Data.Int (Int64)
 import Data.Time.Clock.POSIX (POSIXTime)
 import Foreign.C.Types (CTime(..))
@@ -133,10 +134,12 @@ import System.Directory (writable, setOwnerWritable)
 import System.Directory (executable, setOwnerExecutable)
 import System.Directory (searchable, setOwnerSearchable)
 import System.Directory (doesFileExist, doesDirectoryExist)
+import System.Directory (getSymbolicLinkTarget)
+import System.FilePath (takeExtension)
 import System.IO (IOMode(..), openFile, hSetFileSize, hClose)
 import System.IO.Error
 import System.PosixCompat.Types
-import System.Win32.File hiding (getFileType)
+import System.Win32.File
 import System.Win32.HardLink (createHardLink)
 import System.Win32.Time (FILETIME(..), getFileTime, setFileTime)
 import System.Win32.Types (HANDLE)
@@ -314,14 +317,23 @@ isSocket :: FileStatus -> Bool
 isSocket stat =
     (fileMode stat `intersectFileModes` fileTypeModes) == socketMode
 
-getFileStatus :: FilePath -> IO FileStatus
-getFileStatus path = do
-    perm  <- liftM permsToMode (getPermissions path)
-    typ   <- getFileType path
+getStatus :: Bool -> FilePath -> IO FileStatus
+getStatus forLink path = do
     info  <- bracket openPath closeHandle getFileInformationByHandle
     let atime = windowsToPosixTime (bhfiLastAccessTime info)
         mtime = windowsToPosixTime (bhfiLastWriteTime info)
         ctime = windowsToPosixTime (bhfiCreationTime info)
+        attr = bhfiFileAttributes info
+        isLink = attr .&. fILE_ATTRIBUTE_REPARSE_POINT /= 0
+        isDir = attr .&. fILE_ATTRIBUTE_DIRECTORY /= 0
+        isWritable = attr .&. fILE_ATTRIBUTE_READONLY == 0
+        -- Contrary to Posix systems, directory symlinks on Windows have both
+        -- fILE_ATTRIBUTE_REPARSE_POINT and fILE_ATTRIBUTE_DIRECTORY bits set.
+        typ
+          | isLink = symbolicLinkMode
+          | isDir = directoryMode
+          | otherwise = regularFileMode -- it's a lie but what can we do?
+        perm = permissions path isWritable isDir
     return $ FileStatus
              { deviceID         = fromIntegral (bhfiVolumeSerialNumber info)
              , fileID           = fromIntegral (bhfiFileIndex info)
@@ -340,12 +352,37 @@ getFileStatus path = do
              }
   where
     openPath = createFile path
-                 gENERIC_READ
+                 fILE_READ_EA
                  (fILE_SHARE_READ .|. fILE_SHARE_WRITE .|. fILE_SHARE_DELETE)
                  Nothing
                  oPEN_EXISTING
-                 (sECURITY_ANONYMOUS .|. fILE_FLAG_BACKUP_SEMANTICS)
+                 (fILE_FLAG_BACKUP_SEMANTICS .|. openReparsePoint)
                  Nothing
+
+    openReparsePoint = if forLink then fILE_FLAG_OPEN_REPARSE_POINT else 0
+
+    -- not yet defined in Win32 package:
+    fILE_FLAG_OPEN_REPARSE_POINT :: FileAttributeOrFlag
+    fILE_FLAG_OPEN_REPARSE_POINT = 0x00200000
+
+    -- Fused from System.Directory.Internal.Windows.getAccessPermissions
+    -- and the former modeToPerms function.
+    permissions path is_writable is_dir = r .|. w .|. x
+      where
+        is_executable =
+          (toLower <$> takeExtension path) `elem` [".bat", ".cmd", ".com", ".exe"]
+        r = ownerReadMode .|. groupReadMode .|. otherReadMode
+        w = f is_writable (ownerWriteMode .|. groupWriteMode .|. otherWriteMode)
+        x = f (is_executable || is_dir)
+              (ownerExecuteMode .|. groupExecuteMode .|. otherExecuteMode)
+        f True m  = m
+        f False _ = nullFileMode
+
+getSymbolicLinkStatus :: FilePath -> IO FileStatus
+getSymbolicLinkStatus = getStatus True
+
+getFileStatus :: FilePath -> IO FileStatus
+getFileStatus = getStatus False
 
 -- | Convert a 'POSIXTime' (synomym for 'Data.Time.Clock.NominalDiffTime')
 -- into an 'EpochTime' (integral number of seconds since epoch). This merely
@@ -373,29 +410,8 @@ posixToWindowsTime t = FILETIME $
   truncate (t * 10000000 + windowsPosixEpochDifference)
 -}
 
-permsToMode :: Permissions -> FileMode
-permsToMode perms = r .|. w .|. x
-  where
-    r = f (readable perms) (ownerReadMode .|. groupReadMode .|. otherReadMode)
-    w = f (writable perms) (ownerWriteMode .|. groupWriteMode .|. otherWriteMode)
-    x = f (executable perms || searchable perms)
-          (ownerExecuteMode .|. groupExecuteMode .|. otherExecuteMode)
-    f True m  = m
-    f False _ = nullFileMode
-
-getFileType :: FilePath -> IO FileMode
-getFileType path =
-    do f <- doesFileExist path
-       if f then return regularFileMode
-            else do d <- doesDirectoryExist path
-                    if d then return directoryMode
-                         else unsupported "Unknown file type."
-
 getFdStatus :: Fd -> IO FileStatus
 getFdStatus _ = unsupported "getFdStatus"
-
-getSymbolicLinkStatus :: FilePath -> IO FileStatus
-getSymbolicLinkStatus path = getFileStatus path
 
 createNamedPipe :: FilePath -> FileMode -> IO ()
 createNamedPipe _ _ = unsupported "createNamedPipe"
@@ -419,7 +435,7 @@ createSymbolicLink :: FilePath -> FilePath -> IO ()
 createSymbolicLink _ _ = unsupported "createSymbolicLink"
 
 readSymbolicLink :: FilePath -> IO FilePath
-readSymbolicLink _ = unsupported "readSymbolicLink"
+readSymbolicLink = getSymbolicLinkTarget
 
 -- -----------------------------------------------------------------------------
 -- Renaming
