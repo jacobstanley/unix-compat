@@ -1,14 +1,14 @@
 module LinksSpec(linksSpec) where
+
+import Control.Concurrent ( threadDelay )
+import Control.Exception ( finally )
+import qualified System.Directory as D
+import System.Info ( os )
+import System.IO.Error ( tryIOError )
+import System.IO.Temp
 import System.PosixCompat
 import Test.Hspec
 import Test.HUnit
-import qualified System.Directory as D
-import System.IO.Error (tryIOError)
-import System.IO.Temp
-import System.Info(os)
-import Control.Monad.Extra (whenM)
-import Control.Exception (finally)
-import Control.Concurrent (threadDelay)
 
 isWindows :: Bool
 isWindows = os == "mingw32"
@@ -17,15 +17,15 @@ linksSpec :: Spec
 linksSpec = do
   describe "createSymbolicLink" $ do
     it "should error on Windows and succeed on other OSes" $ do
-        whenM (fileExist "README2.md") $ removeLink "README2.md"
-        result <- tryIOError $ createSymbolicLink "README.md" "README2.md"
+      runInTempDir $ do
+        writeFile "file" ""
+        result <- tryIOError $ createSymbolicLink "file" "file_link"
         case result of
           Left _  | isWindows -> return ()
           Right _ | isWindows -> do
-            removeLink "README2.md"
             assertFailure "Succeeded while expected to fail on Windows"
           Left e              -> assertFailure $ "Expected to succeed, but failed with " ++ show e
-          Right _             -> removeLink "README2.md"
+          Right _             -> return ()
   describe "getSymbolicLinkStatus" $ do
     it "should detect symbolic link to a file" $ do
       runFileLinkTest $ do
@@ -102,20 +102,21 @@ linksSpec = do
     -- POSIXTime. See https://github.com/haskell/unix/issues/214
     delay = 10000
 
-mostlyEq :: FileStatus -> FileStatus -> Bool
-mostlyEq x y = tuple x == tuple y
-  where
-    tuple s =
-      ( deviceID s
-      , fileID s
-      , fileMode s
-      , linkCount s
-      , fileOwner s
-      , fileGroup s
-      , specialDeviceID s
-      , fileSize s
-      , modificationTime s
-      , statusChangeTime s
-      , modificationTimeHiRes s
-      , statusChangeTimeHiRes s
-      )
+    -- Test equality for all parts except accessTime
+    mostlyEq :: FileStatus -> FileStatus -> Bool
+    mostlyEq x y = tuple x == tuple y
+      where
+        tuple s =
+          ( deviceID s
+          , fileID s
+          , fileMode s
+          , linkCount s
+          , fileOwner s
+          , fileGroup s
+          , specialDeviceID s
+          , fileSize s
+          , modificationTime s
+          , statusChangeTime s
+          , modificationTimeHiRes s
+          , statusChangeTimeHiRes s
+          )
