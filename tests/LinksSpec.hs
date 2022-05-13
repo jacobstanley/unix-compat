@@ -97,9 +97,9 @@ linksSpec = do
         action `finally` D.setCurrentDirectory orig
 
     -- We need to set the delay this high because otherwise the timestamp test
-    -- above fails on Linux and Windows, though strangely not on MacOS. My best
-    -- guess is that this is due to rounding errors when we convert to
-    -- POSIXTime. See https://github.com/haskell/unix/issues/214
+    -- above fails on Linux and Windows, though not on MacOS. This seems to be
+    -- an artefact of the GHC runtime system which gives two subsequently
+    -- created files the same timestamp unless the delay is large enough.
     delay = 10000
 
     -- Test equality for all parts except accessTime
