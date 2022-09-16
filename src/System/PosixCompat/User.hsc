@@ -3,7 +3,10 @@
 {-|
 This module makes the operations exported by @System.Posix.User@
 available on all platforms. On POSIX systems it re-exports operations from
-@System.Posix.User@. On other platforms it provides dummy implementations.
+@System.Posix.User@. And if using this module with unix package since version
+@2.8@ on POSIX systems, it redefines some data type and functions for
+compatibilities with unix package prior to version @2.8@. On other platforms it
+provides dummy implementations.
 -}
 module System.PosixCompat.User (
     -- * User environment
@@ -37,7 +40,78 @@ module System.PosixCompat.User (
 
 #include "HsUnixCompat.h"
 
+#ifdef UNIX_2_8
+import System.Posix.Types (GroupID, UserID)
 import System.Posix.User
+    ( getRealUserID
+    , getRealGroupID
+    , getEffectiveUserID
+    , getEffectiveGroupID
+    , getGroups
+    , getLoginName
+    , getEffectiveUserName
+    , setUserID
+    , setGroupID
+    )
+import qualified System.Posix.User as User
+import qualified System.Posix.User.ByteString as BUser
+
+data GroupEntry = GroupEntry
+    { groupName     :: String
+    , groupPassword :: String
+    , groupID       :: GroupID
+    , groupMembers  :: [String]
+    } deriving (Show, Read, Eq)
+
+toCompatGroupEntry :: BUser.GroupEntry -> GroupEntry
+toCompatGroupEntry entry = GroupEntry
+    { groupName = User.groupName entry
+    , groupPassword = User.groupPassword entry
+    , groupID = User.groupID entry
+    , groupMembers = User.groupMembers entry
+    }
+
+getGroupEntryForID :: GroupID -> IO GroupEntry
+getGroupEntryForID = fmap toCompatGroupEntry . User.getGroupEntryForID
+
+getGroupEntryForName :: String -> IO GroupEntry
+getGroupEntryForName = fmap toCompatGroupEntry . User.getGroupEntryForName
+
+getAllGroupEntries :: IO [GroupEntry]
+getAllGroupEntries = fmap (map toCompatGroupEntry) User.getAllGroupEntries
+
+data UserEntry = UserEntry
+    { userName      :: String
+    , userPassword  :: String
+    , userID        :: UserID
+    , userGroupID   :: GroupID
+    , userGecos     :: String
+    , homeDirectory :: String
+    , userShell     :: String
+    } deriving (Show, Read, Eq)
+
+toCompatUserEntry :: BUser.UserEntry -> UserEntry
+toCompatUserEntry entry = UserEntry
+    { userName = User.userName entry
+    , userPassword = User.userPassword entry
+    , userID = User.userID entry
+    , userGroupID = User.userGroupID entry
+    , userGecos = User.userGecos entry
+    , homeDirectory = User.homeDirectory entry
+    , userShell = User.userShell entry
+    }
+
+getUserEntryForID :: UserID -> IO UserEntry
+getUserEntryForID = fmap toCompatUserEntry . User.getUserEntryForID
+
+getUserEntryForName :: String -> IO UserEntry
+getUserEntryForName = fmap toCompatUserEntry . User.getUserEntryForName
+
+getAllUserEntries :: IO [UserEntry]
+getAllUserEntries = fmap (map toCompatUserEntry) User.getAllUserEntries
+#else
+import System.Posix.User
+#endif
 
 #if __GLASGOW_HASKELL__<605
 getAllGroupEntries :: IO [GroupEntry]
