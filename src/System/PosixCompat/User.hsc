@@ -39,14 +39,6 @@ module System.PosixCompat.User (
 
 import System.Posix.User
 
-#if __GLASGOW_HASKELL__<605
-getAllGroupEntries :: IO [GroupEntry]
-getAllGroupEntries = return []
-
-getAllUserEntries :: IO [UserEntry]
-getAllUserEntries = return []
-#endif
-
 #else /* Portable implementation */
 
 import System.IO.Error
