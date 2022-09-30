@@ -35,7 +35,7 @@ module System.PosixCompat.Types (
 
 import Data.Int (Int64)
 import Data.Word (Word8, Word32, Word64)
-import Foreign.C.Types (CUIntPtr)
+import Foreign (Ptr)
 import System.Posix.Types
 
 #ifdef darwin_HOST_OS
