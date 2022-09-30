@@ -19,6 +19,7 @@ module System.PosixCompat.Types (
     , CCc(..)
     , CFsBlkCnt(..)
     , CFsFilCnt(..)
+    , CId(..)
     , CKey(..)
     , CRLim(..)
     , CSpeed(..)
@@ -84,6 +85,12 @@ newtype CFsFilCnt = CFsFilCnt Word64
 instance Show CFsFilCnt where show (CFsFilCnt x) = show x
 instance Read CFsFilCnt where readsPrec i s = [ (CFsFilCnt x, s')
                                             | (x,s') <- readsPrec i s]
+
+newtype CId = CId Word32
+  deriving (Eq, Ord, Enum, Bounded, Integral, Num, Real)
+instance Show CId where show (CId x) = show x
+instance Read CId where readsPrec i s = [ (CId x, s')
+                                      | (x,s') <- readsPrec i s]
 
 newtype CKey = CKey Int32
   deriving (Eq, Ord, Enum, Bounded, Integral, Num, Real)
