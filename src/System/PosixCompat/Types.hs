@@ -22,7 +22,7 @@ module System.PosixCompat.Types (
     , CKey(..)
     , CRLim(..)
     , CSpeed(..)
-    , CTcFlag(..)
+    , CTcflag(..)
     , CTimer(..)
     , UserID
     , CUid(..)
