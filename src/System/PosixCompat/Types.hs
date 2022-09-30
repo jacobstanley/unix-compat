@@ -32,7 +32,7 @@ module System.PosixCompat.Types (
     , LinkCount
     , CNlink(..)
 #endif
-#if !MIN_VERSION_base(4, 14, 0)
+#if defined mingw32_HOST_OS || !MIN_VERSION_base(4, 14, 0)
     , CNfds(..)
     , CSocklen(..)
 #endif
