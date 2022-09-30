@@ -4,3 +4,4 @@
 *.swp
 .ghc.*
 .stack-work
+cabal.project.local
