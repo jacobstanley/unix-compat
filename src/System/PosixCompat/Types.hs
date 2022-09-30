@@ -85,7 +85,7 @@ instance Show CFsFilCnt where show (CFsFilCnt x) = show x
 instance Read CFsFilCnt where readsPrec i s = [ (CFsFilCnt x, s')
                                             | (x,s') <- readsPrec i s]
 
-newtype CKey = CId Int32
+newtype CKey = CKey Int32
   deriving (Eq, Ord, Enum, Bounded, Integral, Num, Real)
 instance Show CKey where show (CKey x) = show x
 instance Read CKey where readsPrec i s = [ (CKey x, s')
