@@ -36,6 +36,8 @@ newtypeCClockId (CClockId x) = x
 
 #ifdef darwin_HOST_OS
 newtypeCDev :: CDev -> Int32
+#elif defined mingw32_HOST_OS
+newtypeCDev :: CDev -> Word32
 #else
 newtypeCDev :: CDev -> Word64
 #endif
@@ -61,13 +63,19 @@ newtypeCGid (CGid x) = x
 newtypeCId :: CId -> Word32
 newtypeCId (CId x) = x
 
+#ifdef mingw32_HOST_OS
+newtypeCIno :: CIno -> Word16
+#else
 newtypeCIno :: CIno -> Word64
+#endif
 newtypeCIno (CIno x) = x
 
 newtypeCKey :: CKey -> Int32
 newtypeCKey (CKey x) = x
 
 #ifdef darwin_HOST_OS
+newtypeCMode :: CMode -> Word16
+#elif defined mingw32_HOST_OS
 newtypeCMode :: CMode -> Word16
 #else
 newtypeCMode :: CMode -> Word32
@@ -91,7 +99,11 @@ newtypeCNlink (CNlink x) = x
 newtypeCOff :: COff -> Int64
 newtypeCOff (COff x) = x
 
+#ifdef mingw32_HOST_OS
+newtypeCPid :: CPid -> Int64
+#else
 newtypeCPid :: CPid -> Int32
+#endif
 newtypeCPid (CPid x) = x
 
 newtypeCRLim :: CRLim -> Word64
