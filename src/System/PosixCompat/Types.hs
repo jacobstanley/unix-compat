@@ -37,7 +37,7 @@ module System.PosixCompat.Types (
 #endif
     ) where
 
-import Data.Int (Int64)
+import Data.Int (Int32, Int64)
 import Data.Word (Word8, Word32, Word64)
 import Foreign (Ptr)
 import System.Posix.Types
