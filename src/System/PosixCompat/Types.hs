@@ -1,6 +1,8 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
+{-# OPTIONS_GHC -Wno-unused-imports #-}
+
 {-|
 This module re-exports the types from @System.Posix.Types@ on all platforms.
 It defines drop-in replacements for types that are missing from that module on a
@@ -24,25 +26,30 @@ module System.PosixCompat.Types (
     , LinkCount
     , CNlink(..)
 #endif
+#if MIN_VERSION_base(4, 14, 3)
+#else
+    , CNfds(..)
+    , CSocklen(..)
+#endif
     ) where
 
+import Data.Int (Int64)
+import Data.Word (Word8, Word32, Word64)
+import Foreign.C.Types (CUIntPtr)
 import System.Posix.Types
 
 #ifdef darwin_HOST_OS
-import Foreign.C.Types (CUIntPtr)
 
 newtype CTimer = CTimer CUIntPtr
   deriving (Eq, Ord)
 instance Show CTimer where show (CTimer x) = show x
 
-#else
+#endif
+
 #ifdef mingw32_HOST_OS
 -- Since CIno (FileID's underlying type) reflects <sys/type.h> ino_t,
 -- which mingw defines as short int (int16), it must be overriden to
 -- match the size of windows fileIndex (word64).
-
-import Data.Int (Int64)
-import Data.Word (Word8, Word32, Word64)
 
 newtype CBlkCnt = CBlkCnt Int64
   deriving (Eq, Ord, Enum, Bounded, Integral, Num, Real)
@@ -56,7 +63,7 @@ instance Show CBlkSize where show (CBlkSize x) = show x
 instance Read CBlkSize where readsPrec i s = [ (CBlkSize x, s')
                                            | (x,s') <- readsPrec i s]
 
-newtype CCc = Ccs Word8
+newtype CCc = CCc Word8
   deriving (Eq, Ord, Enum, Bounded, Integral, Num, Real)
 instance Show CCc where show (CCc x) = show x
 instance Read CCc where readsPrec i s = [ (CCc x, s')
@@ -99,4 +106,20 @@ instance Read CNlink where readsPrec i s = [ (CNlink x, s')
                                            | (x,s') <- readsPrec i s]
 
 #endif
+
+#if MIN_VERSION_base(4, 14, 3)
+#else
+
+newtype CNfds = CNfds Word64
+  deriving (Eq, Ord, Enum, Bounded, Integral, Num, Real)
+instance Show CNfds where show (CNfds x) = show x
+instance Read CNfds where readsPrec i s = [ (CNfds x, s')
+                                          | (x,s') <- readsPrec i s]
+
+newtype CSocklen = CSocklen Word32
+  deriving (Eq, Ord, Enum, Bounded, Integral, Num, Real)
+instance Show CSocklen where show (CSocklen x) = show x
+instance Read CSocklen where readsPrec i s = [ (CSocklen x, s')
+                                             | (x,s') <- readsPrec i s]
+
 #endif

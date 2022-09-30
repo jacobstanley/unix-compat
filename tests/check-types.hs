@@ -51,6 +51,9 @@ newtypeCKey (CKey x) = x
 newtypeCMode :: CMode -> Word32
 newtypeCMode (CMode x) = x
 
+newtypeCNfds :: CNfds -> Word64
+newtypeCNfds (CNfds x) = x
+
 newtypeCNlink :: CNlink -> Word64
 newtypeCNlink (CNlink x) = x
 
@@ -62,6 +65,9 @@ newtypeCPid (CPid x) = x
 
 newtypeCRLim :: CRLim -> Word64
 newtypeCRLim (CRLim x) = x
+
+newtypeCSocklen :: CSocklen -> Word32
+newtypeCSocklen (CSocklen x) = x
 
 newtypeCSpeed :: CSpeed -> Word32
 newtypeCSpeed (CSpeed x) = x
@@ -120,12 +126,4 @@ typeProcessID = id
 typeUserID :: UserID -> CUid
 typeUserID = id
 
-#if MIN_VERSION_base(4, 14, 3)
-newtypeCNfds :: CNfds -> Word64
-newtypeCNfds (CNfds x) = x
-
-newtypeCSocklen :: CSocklen -> Word32
-newtypeCSocklen (CSocklen x) = x
-
-#endif
 #endif
