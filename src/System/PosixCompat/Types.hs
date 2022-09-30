@@ -19,6 +19,12 @@ module System.PosixCompat.Types (
     , CCc(..)
     , CFsBlkCnt(..)
     , CFsFilCnt(..)
+    , CId(..)
+    , CKey(..)
+    , CRLim(..)
+    , CSpeed(..)
+    , CTcFlag(..)
+    , CTimer(..)
     , UserID
     , CUid(..)
     , GroupID
@@ -80,6 +86,40 @@ newtype CFsFilCnt = CFsFilCnt Word64
 instance Show CFsFilCnt where show (CFsFilCnt x) = show x
 instance Read CFsFilCnt where readsPrec i s = [ (CFsFilCnt x, s')
                                             | (x,s') <- readsPrec i s]
+
+newtype CId = CId Word32
+  deriving (Eq, Ord, Enum, Bounded, Integral, Num, Real)
+instance Show CId where show (CId x) = show x
+instance Read CId where readsPrec i s = [ (CId x, s')
+                                      | (x,s') <- readsPrec i s]
+
+newtype CKey = CId Int32
+  deriving (Eq, Ord, Enum, Bounded, Integral, Num, Real)
+instance Show CKey where show (CKey x) = show x
+instance Read CKey where readsPrec i s = [ (CKey x, s')
+                                       | (x,s') <- readsPrec i s]
+
+newtype CRLim = CRLim Word64
+  deriving (Eq, Ord, Enum, Bounded, Integral, Num, Real)
+instance Show CRLim where show (CRLim x) = show x
+instance Read CRLim where readsPrec i s = [ (CRLim x, s')
+                                        | (x,s') <- readsPrec i s]
+
+newtype CSpeed = CSpeed Word32
+  deriving (Eq, Ord, Enum, Bounded, Integral, Num, Real)
+instance Show CSpeed where show (CSpeed x) = show x
+instance Read CSpeed where readsPrec i s = [ (CSpeed x, s')
+                                        | (x,s') <- readsPrec i s]
+
+newtype CTcflag = CTcflag Word32
+  deriving (Eq, Ord, Enum, Bounded, Integral, Num, Real)
+instance Show CTcflag where show (CTcflag x) = show x
+instance Read CTcflag where readsPrec i s = [ (CTcflag x, s')
+                                        | (x,s') <- readsPrec i s]
+
+newtype CTimer = CTimer (Ptr ())
+  deriving (Eq, Ord)
+instance Show CTimer where show (CTimer x) = show x
 
 type UserID = CUid
 
