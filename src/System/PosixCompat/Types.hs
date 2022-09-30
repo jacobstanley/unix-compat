@@ -19,7 +19,6 @@ module System.PosixCompat.Types (
     , CCc(..)
     , CFsBlkCnt(..)
     , CFsFilCnt(..)
-    , CId(..)
     , CKey(..)
     , CRLim(..)
     , CSpeed(..)
@@ -32,8 +31,7 @@ module System.PosixCompat.Types (
     , LinkCount
     , CNlink(..)
 #endif
-#if MIN_VERSION_base(4, 14, 3)
-#else
+#if !MIN_VERSION_base(4, 14, 3)
     , CNfds(..)
     , CSocklen(..)
 #endif
@@ -86,12 +84,6 @@ newtype CFsFilCnt = CFsFilCnt Word64
 instance Show CFsFilCnt where show (CFsFilCnt x) = show x
 instance Read CFsFilCnt where readsPrec i s = [ (CFsFilCnt x, s')
                                             | (x,s') <- readsPrec i s]
-
-newtype CId = CId Word32
-  deriving (Eq, Ord, Enum, Bounded, Integral, Num, Real)
-instance Show CId where show (CId x) = show x
-instance Read CId where readsPrec i s = [ (CId x, s')
-                                      | (x,s') <- readsPrec i s]
 
 newtype CKey = CId Int32
   deriving (Eq, Ord, Enum, Bounded, Integral, Num, Real)
@@ -147,8 +139,7 @@ instance Read CNlink where readsPrec i s = [ (CNlink x, s')
 
 #endif
 
-#if MIN_VERSION_base(4, 14, 3)
-#else
+#if !MIN_VERSION_base(4, 14, 3)
 
 newtype CNfds = CNfds Word64
   deriving (Eq, Ord, Enum, Bounded, Integral, Num, Real)
