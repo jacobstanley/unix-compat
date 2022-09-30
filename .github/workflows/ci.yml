@@ -13,8 +13,8 @@ jobs:
         ghc:
           - 8.8.4
           - 8.10.7
-          - 9.0.1
-          - 9.2.1
+          - 9.0.2
+          - 9.2.4
       fail-fast: false
     continue-on-error: ${{ startsWith(matrix.os, 'windows') && startsWith(matrix.ghc, '9.2') }}
     
