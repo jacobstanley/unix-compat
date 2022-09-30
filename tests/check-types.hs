@@ -74,7 +74,7 @@ newtypeCMode :: CMode -> Word32
 #endif
 newtypeCMode (CMode x) = x
 
-#if defined darwin_HOST_OS && MIN_VERSION_base(4,14,0)
+#if defined darwin_HOST_OS && MIN_VERSION_base(4, 14, 0)
 newtypeCNfds :: CNfds -> Word32
 #else
 newtypeCNfds :: CNfds -> Word64

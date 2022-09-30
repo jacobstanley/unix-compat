@@ -32,7 +32,7 @@ module System.PosixCompat.Types (
     , LinkCount
     , CNlink(..)
 #endif
-#if !MIN_VERSION_base(4, 14, 3)
+#if !MIN_VERSION_base(4, 14, 0)
     , CNfds(..)
     , CSocklen(..)
 #endif
@@ -146,7 +146,7 @@ instance Read CNlink where readsPrec i s = [ (CNlink x, s')
 
 #endif
 
-#if !MIN_VERSION_base(4, 14, 3)
+#if defined mingw32_HOST_OS || !MIN_VERSION_base(4, 14, 0)
 
 newtype CNfds = CNfds Word64
   deriving (Eq, Ord, Enum, Bounded, Integral, Num, Real)
