@@ -40,7 +40,7 @@ import System.Posix.Types
 
 #ifdef darwin_HOST_OS
 
-newtype CTimer = CTimer CUIntPtr
+newtype CTimer = CTimer (Ptr ())
   deriving (Eq, Ord)
 instance Show CTimer where show (CTimer x) = show x
 
@@ -81,7 +81,7 @@ instance Show CFsFilCnt where show (CFsFilCnt x) = show x
 instance Read CFsFilCnt where readsPrec i s = [ (CFsFilCnt x, s')
                                             | (x,s') <- readsPrec i s]
 
-type UserID = UserID CUid
+type UserID = CUid
 
 newtype CUid = CUid Word32
   deriving (Eq, Ord, Enum, Bounded, Integral, Num, Real)
