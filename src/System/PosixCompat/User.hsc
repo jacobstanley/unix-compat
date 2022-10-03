@@ -40,7 +40,7 @@ module System.PosixCompat.User (
 
 #include "HsUnixCompat.h"
 
-#ifdef UNIX_2_8
+#if MIN_VERSION_unix(2, 8, 0)
 import System.Posix.Types (GroupID, UserID)
 import System.Posix.User
     ( getRealUserID
